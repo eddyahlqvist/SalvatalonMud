@@ -1,13 +1,19 @@
-﻿using System;
+﻿using SalvatalonMud;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace SalvatalonMud;
-
 internal class MudServer
 {
+    private readonly World _world;
+
     private const int Port = 4000;
+
+    public MudServer(World world)
+    {
+        _world = world;
+    }
 
     public async Task RunAsync()
     {
@@ -24,7 +30,7 @@ internal class MudServer
 
             Console.WriteLine("A client connected.");
 
-            ClientSession session = new(client);
+            ClientSession session = new(client, _world);
 
             _ = session.RunAsync();
         }

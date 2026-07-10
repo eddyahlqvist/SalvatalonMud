@@ -9,10 +9,12 @@ namespace SalvatalonMud;
 internal class ClientSession
 {
     private readonly TcpClient _client;
+    private readonly World _world;
 
-    public ClientSession(TcpClient client)
+    public ClientSession(TcpClient client, World world)
     {
         _client = client;
+        _world = world;
     }
 
     public async Task RunAsync()

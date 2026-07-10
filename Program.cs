@@ -8,7 +8,9 @@ internal class Program
 {
     private static async Task Main()
     {
-        MudServer server = new();
+        World world = WorldBuilder.Build();
+
+        MudServer server = new(world);
 
         await server.RunAsync();
     }
