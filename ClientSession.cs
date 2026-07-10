@@ -10,6 +10,7 @@ internal class ClientSession
 {
     private readonly TcpClient _client;
     private readonly World _world;
+    private Player? _player;
 
     public ClientSession(TcpClient client, World world)
     {
@@ -36,7 +37,7 @@ internal class ClientSession
                 AutoFlush = true
             };
 
-            await writer.WriteLineAsync("Welcome to Salvatalon!");
+            await writer.WriteLineAsync($"Welcome to {_world.Name}!");
             await writer.WriteAsync("What is your name? ");
 
             string? name = await reader.ReadLineAsync();
@@ -48,9 +49,13 @@ internal class ClientSession
 
             name = name.Trim();
 
+            // create a player
+            PlayerBuilder playerBuilder = new();
+            _player = playerBuilder.Build(name);
+
             await writer.WriteLineAsync();
             await writer.WriteLineAsync(
-                $"Hello, {name}. You are standing in Tyrika Square.");
+                $"Hello, {_player.Name}. You have {_player.HealthPoints} health points.");
 
             await writer.WriteAsync("> ");
 

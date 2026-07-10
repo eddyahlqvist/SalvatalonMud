@@ -4,9 +4,11 @@ namespace SalvatalonMud
 {
     internal class World
     {
+        public string Name { get; }
         public List<Room> Rooms { get; }
-        public World(List<Room> rooms)
+        public World(string name, List<Room> rooms)
         {
+            Name = name;
             Rooms = rooms;
         }
     }

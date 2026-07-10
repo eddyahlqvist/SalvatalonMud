@@ -4,7 +4,7 @@ using System.Collections.Generic;
 internal class WorldBuilder
 {
     public static World Build()
-    {
+    {       
         Room tyrikaSquare = new(
             "Tyrika Square",
             "You are standing in the bustling town square of Tyrika."
@@ -15,6 +15,8 @@ internal class WorldBuilder
             tyrikaSquare
         };
 
-        return new World(rooms);
+        return new World(
+            "Salvatalon",
+            rooms);
     }
 }
