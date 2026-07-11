@@ -1,4 +1,7 @@
-﻿namespace SalvatalonMud
+﻿using System.IO;
+using System.Threading.Tasks;
+
+namespace SalvatalonMud
 {
     internal class CommandHandler
     {
@@ -52,6 +55,42 @@
 
             return $"{player.CurrentRoom.Name}\n" +
                    $"{player.CurrentRoom.Description}";
+        }
+
+        public async Task<bool> HandleCommandAsync(
+            string verb,
+            string argument,
+            Player player,
+            StreamWriter writer)
+        {
+            switch (verb)
+            {
+                case "look":
+                    await LookCommandAsync(argument, player, writer);
+                    return true;
+
+                case "quit":
+                    await QuitCommandAsync(writer);
+                    return false;
+
+                default:
+                    await writer.WriteLineAsync("Unknown command.");
+                    return true;
+            }
+        }
+
+        private async Task LookCommandAsync(
+            string argument,
+            Player player,
+            StreamWriter writer)
+        {
+            await writer.WriteLineAsync(
+                $"You are standing in {player.CurrentRoom.Name}.");
+        }
+
+        private async Task QuitCommandAsync(StreamWriter writer)
+        {
+            await writer.WriteLineAsync("Goodbye!");
         }
     }
 }

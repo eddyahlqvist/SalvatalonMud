@@ -1,4 +1,6 @@
-﻿namespace SalvatalonMud
+﻿using System.Collections.Generic;
+
+namespace SalvatalonMud
 {
     internal class Room
     {
@@ -14,6 +16,18 @@
         {
             Name = name;
             Description = description;
-        }        
+        }
+
+        public string GetExitShort()
+        {
+            List<string> exits = new();
+
+            if (North != null) exits.Add("n");
+            if (South != null) exits.Add("s");
+            if (East != null) exits.Add("e");
+            if (West != null) exits.Add("w");
+
+            return $"Exits: [{string.Join(", ", exits)}]";
+        }
     }
 }

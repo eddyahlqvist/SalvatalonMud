@@ -29,7 +29,8 @@ internal class MudServer
         {
             TcpClient client = await listener.AcceptTcpClientAsync();
 
-            Console.WriteLine("A client connected.");
+            Console.WriteLine(
+                $"[{DateTime.Now:HH:mm:ss}] A client connected.");
 
             ClientSession session = new(client, _world);
 
