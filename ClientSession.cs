@@ -9,6 +9,7 @@ namespace SalvatalonMud;
 internal class ClientSession
 {
     private readonly TcpClient _client;
+    private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
     private Player? _player;
 
@@ -70,48 +71,31 @@ internal class ClientSession
 
                 command = command.Trim().ToLowerInvariant();
 
-                switch (command)
+                if (_commandHandler.TryGetDirection(command, out Direction direction))
                 {
-                    case "look":
-                        await writer.WriteLineAsync($"You are standing in {_player.CurrentRoom.Name}.");
-                        await writer.WriteLineAsync("A suspicious pigeon watches you.");
-                        break;
+                    string result = _commandHandler.HandleDirection(direction, _player);
 
-                    case "north":
-                        if(_player.CurrentRoom.North != null)
-                        {
-                            _player.CurrentRoom = _player.CurrentRoom.North;
-                            await writer.WriteLineAsync(_player.CurrentRoom.Name);
-                            await writer.WriteLineAsync(_player.CurrentRoom.Description);
-                        }
-                        else
-                        {
-                            await writer.WriteLineAsync("You can't go north from here.");
-                        }
-                        break;
-
-                    case "south":
-                        if (_player.CurrentRoom.South != null)
-                        {
-                            _player.CurrentRoom = _player.CurrentRoom.South;
-                            await writer.WriteLineAsync(_player.CurrentRoom.Name);
-                            await writer.WriteLineAsync(_player.CurrentRoom.Description);
-                        }
-                        else
-                        {
-                            await writer.WriteLineAsync("You can't go south from here.");
-                        }
-                        break;
-
-                    case "quit":
-                        await writer.WriteLineAsync("Goodbye!");
-                        return;
-
-                    default:
-                        await writer.WriteLineAsync($"You typed: {command}");
-                        break;
+                    await writer.WriteLineAsync(result);
                 }
+                else
+                {
+                    switch (command)
+                    {
+                        case "look":
+                            await writer.WriteLineAsync($"You are standing in {_player.CurrentRoom.Name}.");
+                            await writer.WriteLineAsync("A suspicious pigeon watches you.");
+                            break;
 
+                        case "quit":
+                            await writer.WriteLineAsync("Goodbye!");
+                            return;
+
+                        default:
+                            await writer.WriteLineAsync($"You typed: {command}");
+                            break;
+                    }
+                }
+                
                 await writer.WriteAsync("> ");
             }
         }
