@@ -77,6 +77,32 @@ internal class ClientSession
                         await writer.WriteLineAsync("A suspicious pigeon watches you.");
                         break;
 
+                    case "north":
+                        if(_player.CurrentRoom.North != null)
+                        {
+                            _player.CurrentRoom = _player.CurrentRoom.North;
+                            await writer.WriteLineAsync(_player.CurrentRoom.Name);
+                            await writer.WriteLineAsync(_player.CurrentRoom.Description);
+                        }
+                        else
+                        {
+                            await writer.WriteLineAsync("You can't go north from here.");
+                        }
+                        break;
+
+                    case "south":
+                        if (_player.CurrentRoom.South != null)
+                        {
+                            _player.CurrentRoom = _player.CurrentRoom.South;
+                            await writer.WriteLineAsync(_player.CurrentRoom.Name);
+                            await writer.WriteLineAsync(_player.CurrentRoom.Description);
+                        }
+                        else
+                        {
+                            await writer.WriteLineAsync("You can't go south from here.");
+                        }
+                        break;
+
                     case "quit":
                         await writer.WriteLineAsync("Goodbye!");
                         return;

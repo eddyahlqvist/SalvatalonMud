@@ -11,9 +11,19 @@ internal class WorldBuilder
             "You are standing in the bustling town square of Tyrika."
         );
 
+        Room northRoad = new(
+            "North Road",
+            "A road leading north from Tyrika."
+        );
+
+        // connect rooms
+        tyrikaSquare.North = northRoad;
+        northRoad.South = tyrikaSquare;
+
         List<Room> rooms = new()
         {
-            tyrikaSquare
+            tyrikaSquare,
+            northRoad
         };
 
         return new World(
