@@ -69,6 +69,14 @@ namespace SalvatalonMud
                     await LookCommandAsync(argument, player, writer);
                     return true;
 
+                case "score":
+                    await ScoreCommandAsync(player, writer);
+                    return true;
+
+                case "pigeon":
+                    await PigeonSoulAsync(writer);
+                    return true;
+
                 case "quit":
                     await QuitCommandAsync(writer);
                     return false;
@@ -84,13 +92,41 @@ namespace SalvatalonMud
             Player player,
             StreamWriter writer)
         {
-            await writer.WriteLineAsync(
+            if(string.IsNullOrWhiteSpace(argument))
+            {
+                await writer.WriteLineAsync(
                 $"You are standing in {player.CurrentRoom.Name}.");
+            }
+
+            else if (argument == "me")
+            {
+                await writer.WriteLineAsync($"You take a moment to look yourself over. " +
+                    $"You are {player.Name}. " +
+                    $"Everything appears to be where you left it.");
+            }
+
+            else
+            {
+                await writer.WriteLineAsync($"You can't seem to find {argument}.");
+            }
         }
 
+        // info commands
+        private async Task ScoreCommandAsync(Player player, StreamWriter writer)
+        {
+            await writer.WriteLineAsync($"HP: {player.HealthPoints}");
+        }
+
+        // system commands
         private async Task QuitCommandAsync(StreamWriter writer)
         {
             await writer.WriteLineAsync("Goodbye!");
+        }
+
+        // souls
+        private async Task PigeonSoulAsync(StreamWriter writer)
+        {
+            await writer.WriteLineAsync("The suspicious pigeon is not impressed.");
         }
     }
 }
