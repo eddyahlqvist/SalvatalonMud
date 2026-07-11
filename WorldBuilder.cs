@@ -7,13 +7,15 @@ internal class WorldBuilder
     public static World Build()
     {       
         Room tyrikaSquare = new(
-            "Tyrika Square",
-            "You are standing in the bustling town square of Tyrika."
+            name: "Tyrika Square",
+            description: "You are standing in the bustling town square of Tyrika.",
+            x: 0, y: 0, z: 0
         );
 
         Room northRoad = new(
-            "North Road",
-            "A road leading north from Tyrika."
+            name: "North Road",
+            description: "A road leading north from Tyrika.",
+            x: 0, y: 1, z: 0
         );
 
         // connect rooms
