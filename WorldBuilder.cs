@@ -1,5 +1,6 @@
-﻿using SalvatalonMud;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+namespace SalvatalonMud;
 
 internal class WorldBuilder
 {
@@ -17,6 +18,7 @@ internal class WorldBuilder
 
         return new World(
             "Salvatalon",
+            tyrikaSquare,
             rooms);
     }
 }

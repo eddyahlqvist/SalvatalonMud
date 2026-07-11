@@ -51,7 +51,7 @@ internal class ClientSession
 
             // create a player
             PlayerBuilder playerBuilder = new();
-            _player = playerBuilder.Build(name);
+            _player = playerBuilder.Build(name, _world.StartingRoom);
 
             await writer.WriteLineAsync();
             await writer.WriteLineAsync(
@@ -73,7 +73,7 @@ internal class ClientSession
                 switch (command)
                 {
                     case "look":
-                        await writer.WriteLineAsync("You are standing in Tyrika Square.");
+                        await writer.WriteLineAsync($"You are standing in {_player.CurrentRoom.Name}.");
                         await writer.WriteLineAsync("A suspicious pigeon watches you.");
                         break;
 

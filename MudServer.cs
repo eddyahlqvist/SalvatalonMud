@@ -1,8 +1,9 @@
-﻿using SalvatalonMud;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
+namespace SalvatalonMud;
 
 internal class MudServer
 {
@@ -21,7 +22,7 @@ internal class MudServer
 
         listener.Start();
 
-        Console.WriteLine($"Salvatalon is listening on port {Port}...");
+        Console.WriteLine($"{_world.Name} is listening on port {Port}...");
         Console.WriteLine("Waiting for travelers...");
 
         while (true)
