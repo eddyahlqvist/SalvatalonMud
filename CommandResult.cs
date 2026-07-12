@@ -1,14 +1,13 @@
-﻿//namespace SalvatalonMud
-//{
-//    internal class CommandResult
-//    {
-//        public bool ShouldContinue { get; }
-//        public string Message { get; }
+﻿namespace SalvatalonMud;
 
-//        public CommandResult(bool shouldContinue, string message)
-//        {
-//            ShouldContinue = shouldContinue;
-//            Message = message;
-//        }
-//    }
-//}
+internal class CommandResult
+{
+    public string Message { get; }
+    public bool ShouldContinue { get; }
+
+    public CommandResult(string message, bool shouldContinue)
+    {
+        Message = message;
+        ShouldContinue = shouldContinue;
+    }
+}

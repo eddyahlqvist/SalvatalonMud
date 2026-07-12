@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace SalvatalonMud
+﻿namespace SalvatalonMud
 {
     internal class CommandHandler
     {
@@ -35,7 +32,9 @@ namespace SalvatalonMud
             }
         }
 
-        public string HandleDirection(Direction direction, Player player)
+        public CommandResult HandleDirection(
+            Direction direction,
+            Player player)
         {
             Room? nextRoom = direction switch
             {
@@ -48,85 +47,99 @@ namespace SalvatalonMud
 
             if (nextRoom is null)
             {
-                return "You can't go that way.";
+                return new CommandResult(
+                    message: "You can't go that way.",
+                    shouldContinue: true);
             }
 
             player.CurrentRoom = nextRoom;
 
-            return $"{player.CurrentRoom.Name}\n" +
-                   $"{player.CurrentRoom.Description}";
+            return new CommandResult(
+                message:
+                    $"{player.CurrentRoom.Name}\n" +
+                    $"{player.CurrentRoom.Description}",
+                shouldContinue: true);
         }
-
-        public async Task<bool> HandleCommandAsync(
-            string verb,
-            string argument,
-            Player player,
-            StreamWriter writer)
+       
+        public CommandResult HandleCommand(string verb, string argument, Player player)
         {
             switch (verb)
             {
-                case "look":
-                    await LookCommandAsync(argument, player, writer);
-                    return true;
-
                 case "score":
-                    await ScoreCommandAsync(player, writer);
-                    return true;
+                    return ScoreCommand(player);
+
+                case "look":
+                    return LookCommand(argument, player);
 
                 case "pigeon":
-                    await PigeonSoulAsync(writer);
-                    return true;
+                    return PigeonSoulCommand();
 
                 case "quit":
-                    await QuitCommandAsync(writer);
-                    return false;
+                    return QuitSysCommand();
 
                 default:
-                    await writer.WriteLineAsync("Unknown command.");
-                    return true;
+                    return new CommandResult(
+                        message: "Unknown command.",
+                        shouldContinue: true);
             }
         }
 
-        private async Task LookCommandAsync(
+
+        private CommandResult LookCommand(
             string argument,
-            Player player,
-            StreamWriter writer)
+            Player player)
         {
-            if(string.IsNullOrWhiteSpace(argument))
+            if (string.IsNullOrWhiteSpace(argument))
             {
-                await writer.WriteLineAsync(
-                $"You are standing in {player.CurrentRoom.Name}.");
+                return new CommandResult(
+                    message: $"You are standing in {player.CurrentRoom.Name}.",
+                    shouldContinue: true
+                );
             }
 
             else if (argument == "me")
             {
-                await writer.WriteLineAsync($"You take a moment to look yourself over. " +
-                    $"You are {player.Name}. " +
-                    $"Everything appears to be where you left it.");
+                return new CommandResult(
+                    message:
+                        $"You take a moment to look yourself over. " +
+                        $"You are {player.Name}. " +
+                        $"Everything appears to be where you left it.",
+                    shouldContinue: true
+                );
             }
 
             else
             {
-                await writer.WriteLineAsync($"You can't seem to find {argument}.");
+                return new CommandResult(
+                    message: $"You can't seem to find {argument}.",
+                    shouldContinue: true
+                );
             }
         }
 
         // info commands
-        private async Task ScoreCommandAsync(Player player, StreamWriter writer)
+        private CommandResult ScoreCommand(Player player)
         {
-            await writer.WriteLineAsync($"HP: {player.HealthPoints}");
+            return new CommandResult(
+                    message: $"HP: {player.HealthPoints}",
+                    shouldContinue: true
+                );
+        }
+
+        // soul commands
+        private CommandResult PigeonSoulCommand()
+        {
+            return new CommandResult(
+                message: "The suspicious pigeon is not impressed.",
+                shouldContinue: true);
         }
 
         // system commands
-        private async Task QuitCommandAsync(StreamWriter writer)
+        private CommandResult QuitSysCommand()
         {
-            await writer.WriteLineAsync("Goodbye!");
-        }
-
-        // souls
-        private async Task PigeonSoulAsync(StreamWriter writer)
-        {
-            await writer.WriteLineAsync("The suspicious pigeon is not impressed.");
+            return new CommandResult(
+                message: "Goodbye!",
+                shouldContinue: false);
         }
     }
 }

@@ -11,7 +11,7 @@ internal class ClientSession
 {
     private readonly TcpClient _client;
     private readonly CommandHandler _commandHandler = new();
-    private readonly World _world;    
+    private readonly World _world;
     private Player? _player;
 
     public ClientSession(TcpClient client, World world)
@@ -40,7 +40,7 @@ internal class ClientSession
             {
                 AutoFlush = true
             };
-            
+
             await writer.WriteLineAsync($"Welcome to {_world.Name}!");
             await writer.WriteAsync("What is your name? ");
 
@@ -68,7 +68,7 @@ internal class ClientSession
 
             while (true)
             {
-                string? command = await reader.ReadLineAsync();                
+                string? command = await reader.ReadLineAsync();
 
                 if (command is null)
                 {
@@ -93,34 +93,34 @@ internal class ClientSession
                     argument = command[(firstSpace + 1)..].Trim();
                 }
 
+                CommandResult result;
+
                 if (_commandHandler.TryGetDirection(
                     verb,
                     out Direction direction))
                 {
-                    string result =
-                        _commandHandler.HandleDirection(
-                            direction,
-                            _player);
+                    result = _commandHandler.HandleDirection(
+                        direction,
+                        _player);
 
-                    await writer.WriteLineAsync(result);
+                    await writer.WriteLineAsync(result.Message);                    
                     await DisplayExitsAsync(
                         writer,
                         _player.CurrentRoom);
                 }
-
                 else
                 {
-                    bool shouldContinue =
-                        await _commandHandler.HandleCommandAsync(
-                            verb,
-                            argument,
-                            _player,
-                            writer);
+                    result = _commandHandler.HandleCommand(
+                        verb,
+                        argument,
+                        _player);
 
-                    if (!shouldContinue)
-                    {
-                        return;
-                    }
+                    await writer.WriteLineAsync(result.Message);
+                }
+
+                if (!result.ShouldContinue)
+                {
+                    return;
                 }
 
                 await writer.WriteAsync("> ");
