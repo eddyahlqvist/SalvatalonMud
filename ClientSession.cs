@@ -12,8 +12,7 @@ internal class ClientSession
     private readonly TcpClient _client;
     private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
-    private Player? _player;
-
+    
     public ClientSession(TcpClient client, World world)
     {
         _client = client;
@@ -58,14 +57,14 @@ internal class ClientSession
 
             // create a player
             PlayerBuilder playerBuilder = new();
-            _player = playerBuilder.Build(name, _world.StartingRoom);
+            Player player = playerBuilder.Build(name, _world.StartingRoom);
 
             await writer.WriteLineAsync();
 
-            await DisplayExitsAsync(writer, _player.CurrentRoom);
+            await DisplayExitsAsync(writer, player.CurrentRoom);
 
             await writer.WriteLineAsync(
-                $"Hello, {_player.Name}. You have {_player.HealthPoints} health points.");
+                $"Hello, {player.Name}. You have {player.HealthPoints} health points.");
 
             await writer.WriteAsync("> ");
 
@@ -82,6 +81,12 @@ internal class ClientSession
 
                 command = command.Trim().ToLowerInvariant();
 
+                if (string.IsNullOrEmpty(command))
+                {
+                    await writer.WriteAsync("> ");
+                    continue;
+                }
+              
                 // split input into verb and arguments
                 string verb;
                 string argument;
@@ -108,12 +113,12 @@ internal class ClientSession
                 {
                     result = _commandHandler.HandleDirection(
                         direction,
-                        _player);
+                        player);
 
                     await writer.WriteLineAsync(result.Message);                    
                     await DisplayExitsAsync(
                         writer,
-                        _player.CurrentRoom);
+                        player.CurrentRoom);
                 }
 
                 // if input is not about player movement handle it here
@@ -122,7 +127,7 @@ internal class ClientSession
                     result = _commandHandler.HandleCommand(
                         verb,
                         argument,
-                        _player);
+                        player);
 
                     await writer.WriteLineAsync(result.Message);
                 }
@@ -140,7 +145,11 @@ internal class ClientSession
         // handle unexpected connection errors
         catch (IOException ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Connection error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected session error: {ex}");
         }
 
         // end session and show session time in console

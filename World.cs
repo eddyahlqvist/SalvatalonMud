@@ -6,8 +6,8 @@ namespace SalvatalonMud
     {
         public string Name { get; }
         public Room StartingRoom { get; }
-        public List<Room> Rooms { get; }
-        public World(string name, Room startingRoom, List<Room> rooms)
+        public IReadOnlyList<Room> Rooms { get; }
+        public World(string name, Room startingRoom, IReadOnlyList<Room> rooms)
         {
             Name = name;
             StartingRoom = startingRoom;
