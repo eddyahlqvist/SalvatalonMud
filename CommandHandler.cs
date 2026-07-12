@@ -72,10 +72,10 @@
                     return LookCommand(argument, player);
 
                 case "pigeon":
-                    return PigeonSoulCommand();
+                    return PigeonCommand();
 
                 case "quit":
-                    return QuitSysCommand();
+                    return QuitCommand();
 
                 default:
                     return new CommandResult(
@@ -127,7 +127,7 @@
         }
 
         // soul commands
-        private CommandResult PigeonSoulCommand()
+        private CommandResult PigeonCommand()
         {
             return new CommandResult(
                 message: "The suspicious pigeon is not impressed.",
@@ -135,7 +135,7 @@
         }
 
         // system commands
-        private CommandResult QuitSysCommand()
+        private CommandResult QuitCommand()
         {
             return new CommandResult(
                 message: "Goodbye!",

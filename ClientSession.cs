@@ -22,8 +22,10 @@ internal class ClientSession
 
     public async Task RunAsync()
     {
+        // log session time (start)
         Stopwatch stopwatch = Stopwatch.StartNew();
 
+        // manage the client connection
         try
         {
             await using NetworkStream stream = _client.GetStream();
@@ -41,6 +43,7 @@ internal class ClientSession
                 AutoFlush = true
             };
 
+            // welcome client and prepare for character creation
             await writer.WriteLineAsync($"Welcome to {_world.Name}!");
             await writer.WriteAsync("What is your name? ");
 
@@ -68,6 +71,8 @@ internal class ClientSession
 
             while (true)
             {
+
+                // read and normalize player input
                 string? command = await reader.ReadLineAsync();
 
                 if (command is null)
@@ -77,6 +82,7 @@ internal class ClientSession
 
                 command = command.Trim().ToLowerInvariant();
 
+                // split input into verb and arguments
                 string verb;
                 string argument;
                 int firstSpace = command.IndexOf(' ');
@@ -93,6 +99,7 @@ internal class ClientSession
                     argument = command[(firstSpace + 1)..].Trim();
                 }
 
+                // check if input is about player movement
                 CommandResult result;
 
                 if (_commandHandler.TryGetDirection(
@@ -108,6 +115,8 @@ internal class ClientSession
                         writer,
                         _player.CurrentRoom);
                 }
+
+                // if input is not about player movement handle it here
                 else
                 {
                     result = _commandHandler.HandleCommand(
@@ -118,6 +127,7 @@ internal class ClientSession
                     await writer.WriteLineAsync(result.Message);
                 }
 
+                // end the session if requested by the command
                 if (!result.ShouldContinue)
                 {
                     return;
@@ -126,10 +136,14 @@ internal class ClientSession
                 await writer.WriteAsync("> ");
             }
         }
+
+        // handle unexpected connection errors
         catch (IOException ex)
         {
             Console.WriteLine(ex.Message);
         }
+
+        // end session and show session time in console
         finally
         {
             stopwatch.Stop();
