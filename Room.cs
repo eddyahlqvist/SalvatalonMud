@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace SalvatalonMud
 {
@@ -13,6 +14,8 @@ namespace SalvatalonMud
         public int Y { get; }
         public int Z { get; }
 
+        public List<Npc> Npcs { get; } = new();
+
         public Room? North { get; set; }
         public Room? South { get; set; }
         public Room? East { get; set; }
@@ -26,6 +29,22 @@ namespace SalvatalonMud
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public string GetDisplayText()
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine(GetExitShort());
+            sb.AppendLine(Name);
+            sb.AppendLine(Description);
+
+            foreach (Npc npc in Npcs)
+            {
+                sb.AppendLine($"{npc.Name} is here.");
+            }            
+
+            return sb.ToString();
         }
 
         public string GetExitShort()

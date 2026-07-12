@@ -12,7 +12,7 @@ internal class ClientSession
     private readonly TcpClient _client;
     private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
-    
+
     public ClientSession(TcpClient client, World world)
     {
         _client = client;
@@ -61,10 +61,10 @@ internal class ClientSession
 
             await writer.WriteLineAsync();
 
-            await DisplayExitsAsync(writer, player.CurrentRoom);
-
             await writer.WriteLineAsync(
-                $"Hello, {player.Name}. You have {player.HealthPoints} health points.");
+                $"Hello, {player.Name}. Welcome to {_world.Name}.\n");
+
+            await writer.WriteLineAsync(player.CurrentRoom.GetDisplayText()); // display login room            
 
             await writer.WriteAsync("> ");
 
@@ -86,7 +86,7 @@ internal class ClientSession
                     await writer.WriteAsync("> ");
                     continue;
                 }
-              
+
                 // split input into verb and arguments
                 string verb;
                 string argument;
@@ -114,32 +114,24 @@ internal class ClientSession
                     result = _commandHandler.HandleDirection(
                         direction,
                         player);
-
-                    await writer.WriteLineAsync(result.Message);                    
-                    await DisplayExitsAsync(
-                        writer,
-                        player.CurrentRoom);
                 }
-
-                // if input is not about player movement handle it here
                 else
                 {
                     result = _commandHandler.HandleCommand(
                         verb,
                         argument,
                         player);
-
-                    await writer.WriteLineAsync(result.Message);
                 }
 
-                // end the session if requested by the command
+                await writer.WriteLineAsync(result.Message);
+
                 if (!result.ShouldContinue)
                 {
                     return;
                 }
 
                 await writer.WriteAsync("> ");
-            }
+            }                        
         }
 
         // handle unexpected connection errors
@@ -164,12 +156,5 @@ internal class ClientSession
 
             Console.WriteLine("A client disconnected.");
         }
-    }
-
-    private async Task DisplayExitsAsync(
-        StreamWriter writer,
-        Room currentRoom)
-    {
-        await writer.WriteLineAsync(currentRoom.GetExitShort());
-    }
+    }    
 }

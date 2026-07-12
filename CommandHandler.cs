@@ -1,4 +1,6 @@
-﻿namespace SalvatalonMud
+﻿using System.Text;
+
+namespace SalvatalonMud
 {
     internal class CommandHandler
     {
@@ -56,11 +58,11 @@
 
             return new CommandResult(
                 message:
-                    $"{player.CurrentRoom.Name}\n" +
-                    $"{player.CurrentRoom.Description}",
+                    $"You move {direction.ToString().ToLowerInvariant()}.\n" +
+                    player.CurrentRoom.GetDisplayText(),
                 shouldContinue: true);
         }
-       
+
         public CommandResult HandleCommand(string verb, string argument, Player player)
         {
             switch (verb)
@@ -70,9 +72,6 @@
 
                 case "look":
                     return LookCommand(argument, player);
-
-                case "pigeon":
-                    return PigeonCommand();
 
                 case "quit":
                     return QuitCommand();
@@ -92,12 +91,11 @@
             if (string.IsNullOrWhiteSpace(argument))
             {
                 return new CommandResult(
-                    message: $"You are standing in {player.CurrentRoom.Name}.",
-                    shouldContinue: true
-                );
+                    message: player.CurrentRoom.GetDisplayText(),
+                    shouldContinue: true);
             }
 
-            else if (argument == "me")
+            if (argument == "me")
             {
                 return new CommandResult(
                     message:
@@ -108,13 +106,20 @@
                 );
             }
 
-            else
+            foreach (Npc npc in player.CurrentRoom.Npcs)
             {
-                return new CommandResult(
-                    message: $"You can't seem to find {argument}.",
-                    shouldContinue: true
-                );
+                if (npc.Name == argument)
+                {
+                    return new CommandResult(
+                        message: npc.Description,
+                        shouldContinue: true);
+                }
             }
+
+            return new CommandResult(
+            message: $"You can't seem to find {argument}.",
+            shouldContinue: true
+            );
         }
 
         // info commands
@@ -124,14 +129,6 @@
                     message: $"HP: {player.HealthPoints}",
                     shouldContinue: true
                 );
-        }
-
-        // soul commands
-        private CommandResult PigeonCommand()
-        {
-            return new CommandResult(
-                message: "The suspicious pigeon is not impressed.",
-                shouldContinue: true);
         }
 
         // system commands

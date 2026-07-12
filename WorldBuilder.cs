@@ -5,7 +5,8 @@ namespace SalvatalonMud;
 internal class WorldBuilder
 {
     public static World Build()
-    {       
+    {
+        // create rooms
         Room tyrikaSquare = new(
             name: "Tyrika Square",
             description: "You are standing in the bustling town square of Tyrika.",
@@ -27,6 +28,16 @@ internal class WorldBuilder
             tyrikaSquare,
             northRoad
         };
+
+        // create NPCs
+        Npc pigeon = new(
+            name: "suspicious pigeon",
+            description: "A suspicious pigeon watches you with open contempt.",
+            currentRoom: tyrikaSquare,
+            healthPoints: 2);
+
+        // add NPCs to specific rooms
+        tyrikaSquare.Npcs.Add(pigeon);
 
         return new World(
             "Salvatalon",
