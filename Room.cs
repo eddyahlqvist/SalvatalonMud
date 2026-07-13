@@ -41,8 +41,8 @@ namespace SalvatalonMud
 
             foreach (Npc npc in Npcs)
             {
-                sb.AppendLine($"{npc.Name} is here.");
-            }            
+                sb.AppendLine($"{npc.DisplayName} is here.");
+            }
 
             return sb.ToString();
         }
