@@ -32,6 +32,7 @@ internal class WorldBuilder
         // create NPCs
         Npc pigeon = new(
             name: "suspicious pigeon",
+            tag: "pigeon",
             description: "A suspicious pigeon watches you with open contempt.",
             currentRoom: tyrikaSquare,
             healthPoints: 2);
