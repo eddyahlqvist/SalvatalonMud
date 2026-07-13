@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SalvatalonMud;
 
@@ -44,11 +45,35 @@ internal class WorldBuilder
             healthPoints: 2);
 
         // add NPCs to specific rooms
-        tyrikaSquare.Npcs.Add(pigeon);
+        AddPigeons(
+            amount: 3, 
+            room: tyrikaSquare
+            );
 
         return new World(
             "Salvatalon",
             tyrikaSquare,
             rooms);
+    }
+    private static void AddPigeons(int amount, Room room)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Npc pigeon = new(
+                name: "suspicious pigeon",
+                keywords: new[]
+                {
+                "pigeon",
+                "bird",
+                "animal",
+                "monster"
+                },
+                description:
+                    "A suspicious pigeon watches you with open contempt.",
+                currentRoom: room,
+                healthPoints: 2);
+
+            room.Npcs.Add(pigeon);
+        }
     }
 }
