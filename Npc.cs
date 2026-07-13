@@ -1,11 +1,12 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace SalvatalonMud
 {
     internal class Npc
     {
         public string Name { get; }
-        public string Tag { get; }
+        public List<string> Keywords { get; }
         public string DisplayName { get; }
         public string Description { get; }
         public Room CurrentRoom { get; set; }
@@ -13,23 +14,28 @@ namespace SalvatalonMud
 
         public Npc(
             string name,
-            string tag,
+            IEnumerable<string> keywords,
             string description,            
             Room currentRoom,
             int healthPoints)
         {
             Name = name;
+
             DisplayName = CultureInfo
                 .InvariantCulture
                 .TextInfo
                 .ToTitleCase(name);
 
-            Tag = tag;
+            Keywords = new List<string>(keywords);
             Description = description;
             CurrentRoom = currentRoom;
             HealthPoints = healthPoints;
         }
 
+        public bool Matches(string input)
+        {
+            return Name == input || Keywords.Contains(input);
+        }
 
         public void MoveTo(Room destination)
         {

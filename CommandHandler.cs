@@ -108,7 +108,7 @@ namespace SalvatalonMud
 
             foreach (Npc npc in player.CurrentRoom.Npcs)
             {
-                if (npc.Name == argument || npc.Tag == argument)
+                if (npc.Matches(argument))
                 {
                     return new CommandResult(
                         message: npc.Description,
