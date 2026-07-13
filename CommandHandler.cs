@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace SalvatalonMud
+﻿namespace SalvatalonMud
 {
     internal class CommandHandler
     {
@@ -38,14 +36,7 @@ namespace SalvatalonMud
             Direction direction,
             Player player)
         {
-            Room? nextRoom = direction switch
-            {
-                Direction.North => player.CurrentRoom.North,
-                Direction.South => player.CurrentRoom.South,
-                Direction.East => player.CurrentRoom.East,
-                Direction.West => player.CurrentRoom.West,
-                _ => null
-            };
+            Room? nextRoom = player.CurrentRoom.GetExit(direction);
 
             if (nextRoom is null)
             {
@@ -73,6 +64,9 @@ namespace SalvatalonMud
                 case "look":
                     return LookCommand(argument, player);
 
+                case "push":    // probably temporary or maybe immortal command later
+                    return PushCommand(argument, player);
+
                 case "quit":
                     return QuitCommand();
 
@@ -81,6 +75,84 @@ namespace SalvatalonMud
                         message: "Unknown command.",
                         shouldContinue: true);
             }
+        }
+
+        private CommandResult PushCommand(
+            string argument,
+            Player player)
+        {
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                return new CommandResult(
+                    message: "Push what?",
+                    shouldContinue: true);
+            }
+
+            if (argument == "me")
+            {
+                return new CommandResult(
+                    message: "You fail to push yourself over.",
+                    shouldContinue: true);
+            }
+
+            int lastSpace = argument.LastIndexOf(' ');
+
+            if (lastSpace == -1)
+            {
+                return new CommandResult(
+                    message: "Push what in which direction?",
+                    shouldContinue: true);
+            }
+
+            string target = argument[..lastSpace].Trim();
+            string directionInput =
+                argument[(lastSpace + 1)..].Trim();
+
+            if (!TryGetDirection(
+                directionInput,
+                out Direction direction))
+            {
+                return new CommandResult(
+                    message: $"{directionInput} is not a valid direction.",
+                    shouldContinue: true);
+            }
+
+            Npc? targetNpc = null;
+
+            foreach (Npc npc in player.CurrentRoom.Npcs)
+            {
+                if (npc.Matches(target))
+                {
+                    targetNpc = npc;
+                    break;
+                }
+            }
+
+            if (targetNpc is null)
+            {
+                return new CommandResult(
+                    message: $"You can't seem to find {target}.",
+                    shouldContinue: true);
+            }
+
+            Room? destination =
+                player.CurrentRoom.GetExit(direction);
+
+            if (destination is null)
+            {
+                return new CommandResult(
+                    message:
+                        $"There is no exit {directionInput}.",
+                    shouldContinue: true);
+            }
+
+            targetNpc.MoveTo(destination);
+
+            return new CommandResult(
+                message:
+                    $"You push {targetNpc.DisplayName} " +
+                    $"{directionInput}.",
+                shouldContinue: true);
         }
 
 

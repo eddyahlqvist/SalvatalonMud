@@ -120,7 +120,8 @@ internal class ClientSession
                     result = _commandHandler.HandleCommand(
                         verb,
                         argument,
-                        player);
+                        player
+                        );
                 }
 
                 await writer.WriteLineAsync(result.Message);

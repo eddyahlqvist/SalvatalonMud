@@ -58,5 +58,17 @@ namespace SalvatalonMud
 
             return $"Exits: [{string.Join(", ", exits)}]";
         }
+
+        public Room? GetExit(Direction direction)
+        {
+            return direction switch
+            {
+                Direction.North => North,
+                Direction.South => South,
+                Direction.East => East,
+                Direction.West => West,
+                _ => null
+            };
+        }
     }
 }
