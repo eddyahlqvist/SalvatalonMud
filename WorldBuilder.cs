@@ -28,27 +28,19 @@ internal class WorldBuilder
         {
             tyrikaSquare,
             northRoad
-        };
+        };             
 
-        // create NPCs
-        Npc pigeon = new(
-            name: "suspicious pigeon",
-            keywords: new[]
-            {
-                "pigeon",
-                "bird",
-                "animal",
-                "monster"
-            },
-            description: "A suspicious pigeon watches you with open contempt.",
-            currentRoom: tyrikaSquare,
-            healthPoints: 2);
-
-        // add NPCs to specific rooms
+        // create and add NPCs to specific rooms
         AddPigeons(
             amount: 3, 
             room: tyrikaSquare
             );
+
+        AddTownGuards(
+            amount: 1,
+            room: tyrikaSquare
+            );
+
 
         return new World(
             "Salvatalon",
@@ -61,6 +53,7 @@ internal class WorldBuilder
         {
             Npc pigeon = new(
                 name: "suspicious pigeon",
+                displayNamePlural: "Suspicious Pigeons",
                 keywords: new[]
                 {
                 "pigeon",
@@ -74,6 +67,31 @@ internal class WorldBuilder
                 healthPoints: 2);
 
             room.Npcs.Add(pigeon);
+        }
+    }
+
+    private static void AddTownGuards(int amount, Room room)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Npc townGuard = new(
+                name: "town guard",
+                displayNamePlural: "Town Guards",
+                keywords: new[]
+                {
+                "guard",                
+                "monster"
+                },
+                description:
+                    "This world-weary city guard slouches in a rusty breastplate, " +
+                    "wearing an expression that suggests he would rather be in a pub. " +
+                    "He clutches a splintered wooden truncheon, radiating the distinct, resigned " +
+                    "energy of a man whose primary goal is surviving his shift without seeing " +
+                    "anything that requires paperwork.",
+                currentRoom: room,
+                healthPoints: 10);
+
+            room.Npcs.Add(townGuard);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace SalvatalonMud
 {
@@ -39,12 +40,41 @@ namespace SalvatalonMud
             sb.AppendLine(Name);
             sb.AppendLine(Description);
 
-            foreach (Npc npc in Npcs)
+            foreach (var npcGroup in Npcs.GroupBy(npc => npc.Name))
             {
-                sb.AppendLine($"{npc.DisplayName} is here.");
+                int amount = npcGroup.Count();
+                Npc npc = npcGroup.First();
+
+                if (amount == 1)
+                {
+                    sb.AppendLine($"{npc.DisplayName} is here.");
+                }
+                else
+                {
+                    string amountText = GetAmountText(amount);
+
+                    sb.AppendLine(
+                        $"{amountText} {npc.DisplayNamePlural} are here.");
+                }
             }
 
             return sb.ToString();
+        }
+
+        private static string GetAmountText(int amount)
+        {
+            return amount switch
+            {
+                2 => "Two",
+                3 => "Three",
+                4 => "Four",
+                5 => "Five",
+                6 => "Six",
+                7 => "Seven",
+                8 => "Eight",
+                9 => "Nine",
+                _ => amount.ToString()
+            };
         }
 
         public string GetExitShort()

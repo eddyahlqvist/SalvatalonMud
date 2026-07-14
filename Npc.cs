@@ -8,12 +8,14 @@ namespace SalvatalonMud
         public string Name { get; }
         public List<string> Keywords { get; }
         public string DisplayName { get; }
+        public string DisplayNamePlural { get; }
         public string Description { get; }
         public Room CurrentRoom { get; set; }
         public int HealthPoints { get; set; }
 
         public Npc(
             string name,
+            string displayNamePlural,
             IEnumerable<string> keywords,
             string description,            
             Room currentRoom,
@@ -26,6 +28,7 @@ namespace SalvatalonMud
                 .TextInfo
                 .ToTitleCase(name);
 
+            DisplayNamePlural = displayNamePlural;
             Keywords = new List<string>(keywords);
             Description = description;
             CurrentRoom = currentRoom;
