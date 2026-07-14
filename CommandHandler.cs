@@ -64,7 +64,7 @@
                 case "look":
                     return LookCommand(argument, player);
 
-                case "push":    // probably temporary or maybe immortal command later
+                case "push":
                     return PushCommand(argument, player);
 
                 case "quit":
@@ -76,6 +76,39 @@
                         shouldContinue: true);
             }
         }
+
+        private TargetInfo ParseTarget(string input)
+        {
+            input = input.Trim();
+
+            int lastSpace = input.LastIndexOf(' ');
+
+            if (lastSpace == -1)
+            {
+                return new TargetInfo(
+                    name: input,
+                    index: 1);
+            }
+
+            string possibleIndex =
+                input[(lastSpace + 1)..].Trim();
+
+            if (!int.TryParse(possibleIndex, out int index) ||
+                index < 1)
+            {
+                return new TargetInfo(
+                    name: input,
+                    index: 1);
+            }
+
+            string target =
+                input[..lastSpace].Trim();
+
+            return new TargetInfo(
+                name: target,
+                index: index);
+        }
+
 
         private CommandResult PushCommand(
             string argument,
@@ -100,7 +133,7 @@
             if (lastSpace == -1)
             {
                 return new CommandResult(
-                    message: "Push what in which direction?",
+                    message: "Push what in which direction?", // fix better version later
                     shouldContinue: true);
             }
 
@@ -159,7 +192,7 @@
         private CommandResult LookCommand(
             string argument,
             Player player)
-        {
+        {            
             if (string.IsNullOrWhiteSpace(argument))
             {
                 return new CommandResult(
@@ -178,9 +211,20 @@
                 );
             }
 
+            int currentMatch = 0;
+
+            TargetInfo target = ParseTarget(argument);
+
             foreach (Npc npc in player.CurrentRoom.Npcs)
             {
-                if (npc.Matches(argument))
+                if (!npc.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentMatch++;
+
+                if (currentMatch == target.Index)
                 {
                     return new CommandResult(
                         message: npc.Description,
