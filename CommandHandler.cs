@@ -50,7 +50,7 @@
             return new CommandResult(
                 message:
                     $"You move {direction.ToString().ToLowerInvariant()}.\n" +
-                    player.CurrentRoom.GetDisplayText(),
+                    player.CurrentRoom.GetDisplayText(includeDescription: true),
                 shouldContinue: true);
         }
 
@@ -63,6 +63,9 @@
 
                 case "look":
                     return LookCommand(argument, player);
+
+                case "glance":
+                    return GlanceCommand(argument, player);
 
                 case "push":
                     return PushCommand(argument, player);
@@ -207,7 +210,7 @@
             if (string.IsNullOrWhiteSpace(argument))
             {
                 return new CommandResult(
-                    message: player.CurrentRoom.GetDisplayText(),
+                    message: player.CurrentRoom.GetDisplayText(includeDescription: true),
                     shouldContinue: true);
             }
 
@@ -236,7 +239,7 @@
                 }
 
                 return new CommandResult(
-                        message: nextRoom.GetDisplayText(),
+                        message: nextRoom.GetDisplayText(includeDescription: true),
                         shouldContinue: true);
             }
 
@@ -263,6 +266,41 @@
 
             return new CommandResult(
                 message: $"You can't seem to find {argument}.",
+                shouldContinue: true
+                );
+        }
+
+        private CommandResult GlanceCommand(
+            string argument,
+            Player player)
+        {
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                return new CommandResult(
+                    message: player.CurrentRoom.GetDisplayText(includeDescription: false),
+                    shouldContinue: true);
+            }            
+
+            if (TryGetDirection(
+                argument,
+                out Direction direction))
+            {
+                Room? nextRoom = player.CurrentRoom.GetExit(direction);
+
+                if (nextRoom is null)
+                {
+                    return new CommandResult(
+                        message: "You see nothing of interest in that direction.",
+                        shouldContinue: true);
+                }
+
+                return new CommandResult(
+                        message: nextRoom.GetDisplayText(includeDescription: false),
+                        shouldContinue: true);
+            }            
+
+            return new CommandResult(
+                message: "You glance purposefully at absolutely nothing in particular.",
                 shouldContinue: true
                 );
         }

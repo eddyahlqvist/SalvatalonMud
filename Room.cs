@@ -32,14 +32,19 @@ namespace SalvatalonMud
             Z = z;
         }
 
-        public string GetDisplayText()
+        public string GetDisplayText(bool includeDescription)
         {
             StringBuilder sb = new();
 
-            sb.AppendLine(GetExitShort());
             sb.AppendLine(Name);
-            sb.AppendLine(Description);
 
+            sb.AppendLine(GetExitShort());
+
+            if (includeDescription)
+            {
+                sb.AppendLine(Description);
+            }
+                        
             foreach (var npcGroup in Npcs.GroupBy(npc => npc.Name))
             {
                 int amount = npcGroup.Count();
