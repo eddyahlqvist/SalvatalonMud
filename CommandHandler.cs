@@ -70,6 +70,9 @@
                 case "push":
                     return PushCommand(argument, player);
 
+                case "save":
+                    return SaveCommand();
+
                 case "quit":
                     return QuitCommand();
 
@@ -320,6 +323,13 @@
             return new CommandResult(
                 message: "Goodbye!",
                 shouldContinue: false);
+        }
+
+        private CommandResult SaveCommand()
+        {
+            return new CommandResult(
+                message: "Saving... [████████████████████] 100% complete! Just kidding. I haven't coded that yet.",
+                shouldContinue: true);
         }
     }
 }
