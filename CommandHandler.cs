@@ -200,7 +200,6 @@
                 shouldContinue: true);
         }
 
-
         private CommandResult LookCommand(
             string argument,
             Player player)
@@ -221,6 +220,24 @@
                         $"Everything appears to be where you left it.",
                     shouldContinue: true
                 );
+            }
+
+            if (TryGetDirection(
+                argument,
+                out Direction direction))
+            {
+                Room? nextRoom = player.CurrentRoom.GetExit(direction);
+
+                if (nextRoom is null)
+                {
+                    return new CommandResult(
+                        message: "You see nothing of interest in that direction.",
+                        shouldContinue: true);
+                }
+
+                return new CommandResult(
+                        message: nextRoom.GetDisplayText(),
+                        shouldContinue: true);
             }
 
             int currentMatch = 0;
@@ -245,9 +262,9 @@
             }
 
             return new CommandResult(
-            message: $"You can't seem to find {argument}.",
-            shouldContinue: true
-            );
+                message: $"You can't seem to find {argument}.",
+                shouldContinue: true
+                );
         }
 
         // info commands
