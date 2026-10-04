@@ -137,9 +137,12 @@
                     shouldContinue: true);
             }
 
-            string target = argument[..lastSpace].Trim();
+            string targetInput = argument[..lastSpace].Trim();
+
             string directionInput =
                 argument[(lastSpace + 1)..].Trim();
+
+            TargetInfo target = ParseTarget(targetInput);
 
             if (!TryGetDirection(
                 directionInput,
@@ -152,9 +155,18 @@
 
             Npc? targetNpc = null;
 
+            int currentMatch = 0;
+
             foreach (Npc npc in player.CurrentRoom.Npcs)
             {
-                if (npc.Matches(target))
+                if (!npc.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentMatch++;
+
+                if (currentMatch == target.Index)
                 {
                     targetNpc = npc;
                     break;
@@ -164,7 +176,7 @@
             if (targetNpc is null)
             {
                 return new CommandResult(
-                    message: $"You can't seem to find {target}.",
+                    message: $"You can't seem to find {target.Name}.",
                     shouldContinue: true);
             }
 
@@ -192,7 +204,7 @@
         private CommandResult LookCommand(
             string argument,
             Player player)
-        {            
+        {
             if (string.IsNullOrWhiteSpace(argument))
             {
                 return new CommandResult(
