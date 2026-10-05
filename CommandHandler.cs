@@ -45,7 +45,7 @@
                     shouldContinue: true);
             }
 
-            player.CurrentRoom = nextRoom;
+            player.MoveTo(nextRoom);
 
             return new CommandResult(
                 message:
@@ -74,7 +74,7 @@
                     return SaveCommand();
 
                 case "quit":
-                    return QuitCommand();
+                    return QuitCommand(player);
 
                 default:
                     return new CommandResult(
@@ -318,11 +318,11 @@
         }
 
         // system commands
-        private CommandResult QuitCommand()
-        {
+        private CommandResult QuitCommand(Player player)
+        {            
             return new CommandResult(
                 message: "Goodbye!",
-                shouldContinue: false);
+                shouldContinue: false);            
         }
 
         private CommandResult SaveCommand()

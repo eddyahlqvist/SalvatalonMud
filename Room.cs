@@ -17,6 +17,8 @@ namespace SalvatalonMud
 
         public List<Npc> Npcs { get; } = new();
 
+        public List<Player> Players { get; } = new();
+
         public Room? North { get; set; }
         public Room? South { get; set; }
         public Room? East { get; set; }
@@ -44,7 +46,12 @@ namespace SalvatalonMud
             {
                 sb.AppendLine(Description);
             }
-                        
+
+            foreach (var player in Players)
+            {
+                sb.AppendLine($"{player.Name}");
+            }           
+
             foreach (var npcGroup in Npcs.GroupBy(npc => npc.Name))
             {
                 int amount = npcGroup.Count();

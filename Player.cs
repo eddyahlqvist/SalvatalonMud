@@ -12,5 +12,14 @@
             CurrentRoom = currentRoom;
             HealthPoints = healthPoints;            
         }
+
+        public void MoveTo(Room destination)
+        {
+            CurrentRoom.Players.Remove(this);
+
+            CurrentRoom = destination;
+
+            destination.Players.Add(this);
+        }
     }
 }

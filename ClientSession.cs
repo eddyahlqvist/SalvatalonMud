@@ -12,6 +12,7 @@ internal class ClientSession
     private readonly TcpClient _client;
     private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
+    private Player? _player;
 
     public ClientSession(TcpClient client, World world)
     {
@@ -57,14 +58,16 @@ internal class ClientSession
 
             // create a player
             PlayerBuilder playerBuilder = new();
-            Player player = playerBuilder.Build(name, _world.StartingRoom);
+            _player = playerBuilder.Build(name, _world.StartingRoom);
+
+            _player.CurrentRoom.Players.Add(_player);
 
             await writer.WriteLineAsync();
 
             await writer.WriteLineAsync(
-                $"Hello, {player.Name}. Welcome to {_world.Name}.\n");
+                $"Hello, {_player.Name}. Welcome to {_world.Name}.\n");
 
-            await writer.WriteLineAsync(player.CurrentRoom.GetDisplayText(includeDescription: true)); // display login room            
+            await writer.WriteLineAsync(_player.CurrentRoom.GetDisplayText(includeDescription: true)); // display login room            
 
             await writer.WriteAsync("> ");
 
@@ -106,21 +109,21 @@ internal class ClientSession
 
                 // check if input is about player movement
                 CommandResult result;
-
+                
                 if (_commandHandler.TryGetDirection(
                     verb,
                     out Direction direction))
                 {
                     result = _commandHandler.HandleDirection(
                         direction,
-                        player);
+                        _player);
                 }
                 else
                 {
                     result = _commandHandler.HandleCommand(
                         verb,
                         argument,
-                        player
+                        _player
                         );
                 }
 
@@ -149,9 +152,14 @@ internal class ClientSession
         finally
         {
             stopwatch.Stop();
-
+            
             Console.WriteLine(
                 $"[{DateTime.Now:HH:mm:ss}] Session lasted {stopwatch.Elapsed:mm\\:ss}.");
+
+            if (_player != null)
+            {
+                _player.CurrentRoom.Players.Remove(_player);
+            }
 
             _client.Dispose();
 

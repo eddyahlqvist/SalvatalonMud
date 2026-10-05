@@ -42,9 +42,9 @@ internal class WorldBuilder
 
 
         return new World(
-            "Salvatalon",
-            tyrikaSquare,
-            rooms);
+            name: "Salvatalon",
+            startingRoom: tyrikaSquare,
+            rooms: rooms);
     }
     private static void AddPigeons(int amount, Room room)
     {
