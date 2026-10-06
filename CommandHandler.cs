@@ -50,7 +50,7 @@
             return new CommandResult(
                 message:
                     $"You move {direction.ToString().ToLowerInvariant()}.\n" +
-                    player.CurrentRoom.GetDisplayText(includeDescription: true),
+                    player.CurrentRoom.GetDisplayText(includeDescription: true, player),
                 shouldContinue: true);
         }
 
@@ -213,7 +213,7 @@
             if (string.IsNullOrWhiteSpace(argument))
             {
                 return new CommandResult(
-                    message: player.CurrentRoom.GetDisplayText(includeDescription: true),
+                    message: player.CurrentRoom.GetDisplayText(includeDescription: true, player),
                     shouldContinue: true);
             }
 
@@ -242,7 +242,7 @@
                 }
 
                 return new CommandResult(
-                        message: nextRoom.GetDisplayText(includeDescription: true),
+                        message: nextRoom.GetDisplayText(includeDescription: true, player),
                         shouldContinue: true);
             }
 
@@ -280,7 +280,7 @@
             if (string.IsNullOrWhiteSpace(argument))
             {
                 return new CommandResult(
-                    message: player.CurrentRoom.GetDisplayText(includeDescription: false),
+                    message: player.CurrentRoom.GetDisplayText(includeDescription: false, player),
                     shouldContinue: true);
             }            
 
@@ -298,7 +298,7 @@
                 }
 
                 return new CommandResult(
-                        message: nextRoom.GetDisplayText(includeDescription: false),
+                        message: nextRoom.GetDisplayText(includeDescription: false, player),
                         shouldContinue: true);
             }            
 

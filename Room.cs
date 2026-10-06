@@ -34,7 +34,7 @@ namespace SalvatalonMud
             Z = z;
         }
 
-        public string GetDisplayText(bool includeDescription)
+        public string GetDisplayText(bool includeDescription, Player player)
         {
             StringBuilder sb = new();
 
@@ -47,10 +47,13 @@ namespace SalvatalonMud
                 sb.AppendLine(Description);
             }
 
-            foreach (var player in Players)
+            foreach (var otherPlayer in Players)
             {
-                sb.AppendLine($"{player.Name}");
-            }           
+                if (otherPlayer != player)
+                {
+                    sb.AppendLine($"{otherPlayer.Name} is here.");
+                }                
+            }
 
             foreach (var npcGroup in Npcs.GroupBy(npc => npc.Name))
             {

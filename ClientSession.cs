@@ -67,7 +67,7 @@ internal class ClientSession
             await writer.WriteLineAsync(
                 $"Hello, {_player.Name}. Welcome to {_world.Name}.\n");
 
-            await writer.WriteLineAsync(_player.CurrentRoom.GetDisplayText(includeDescription: true)); // display login room            
+            await writer.WriteLineAsync(_player.CurrentRoom.GetDisplayText(includeDescription: true, _player)); // display login room            
 
             await writer.WriteAsync("> ");
 
