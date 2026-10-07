@@ -12,7 +12,7 @@ internal class ClientSession
     private readonly TcpClient _client;
     private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
-    public Player? Player { get; private set; }
+    internal Player? Player { get; private set; }
 
     public ClientSession(TcpClient client, World world)
     {
