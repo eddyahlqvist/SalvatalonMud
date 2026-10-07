@@ -52,7 +52,7 @@ internal class MudServer
             Console.WriteLine($"Session error: {ex.Message}");
         }
         finally 
-        { 
+        {             
             _sessions.Remove(session);
             Console.WriteLine($"Amount of sessions: {_sessions.Count}."); // tmp for testing
         }        
