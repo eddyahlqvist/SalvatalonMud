@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace SalvatalonMud;
@@ -23,7 +24,6 @@ internal class MudServer
         TcpListener listener = new(IPAddress.Loopback, Port);
 
         listener.Start();
-        Console.WriteLine($"Amount of sessions: {_sessions.Count}."); // tmp for testing
         Console.WriteLine($"{_world.Name} is listening on port {Port}...");
         Console.WriteLine("Waiting for travelers...");
 
@@ -35,17 +35,26 @@ internal class MudServer
                 $"[{DateTime.Now:HH:mm:ss}] A client connected.");
 
             ClientSession session = new(client, _world);
-            _ = HandleSession(session);            
+                       
+            foreach (ClientSession active in _sessions)
+            {
+                if (active.Player != null)
+                {
+                    await active.SendMessageAsync("A new traverler approaches the gates. ");
+                }
+            }
+
+            _ = HandleSession(session);
         }
     }
 
     private async Task HandleSession(ClientSession session)
-    {
+    {        
         _sessions.Add(session);
-        Console.WriteLine($"Amount of sessions: {_sessions.Count}."); // tmp for testing
+
         try
         {
-            await session.RunAsync();
+            await session.RunAsync();            
         }
         catch (Exception ex)
         {
@@ -54,7 +63,6 @@ internal class MudServer
         finally 
         {             
             _sessions.Remove(session);
-            Console.WriteLine($"Amount of sessions: {_sessions.Count}."); // tmp for testing
         }        
     }
 }

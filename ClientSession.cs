@@ -13,6 +13,7 @@ internal class ClientSession
     private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
     internal Player? Player { get; private set; }
+    private StreamWriter? _writer;
 
     public ClientSession(TcpClient client, World world)
     {
@@ -42,6 +43,8 @@ internal class ClientSession
             {
                 AutoFlush = true
             };
+
+            _writer = writer;
 
             // welcome client and prepare for character creation
             await writer.WriteLineAsync($"Welcome to {_world.Name}!");
@@ -165,5 +168,15 @@ internal class ClientSession
 
             Console.WriteLine("A client disconnected.");
         }
+    }
+
+    public async Task SendMessageAsync(string message)
+    {
+        if (_writer == null)
+        {
+            return;
+        }
+
+        await _writer.WriteLineAsync(message);
     }
 }

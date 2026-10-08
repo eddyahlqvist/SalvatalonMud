@@ -16,6 +16,7 @@ No roadmap, no promises, no particular order.
 - Add inventory for players
 - Coins (cc, sc, gc and pc)
 - Bank (store and change coins)
+- Command inform on/off (show log in and log out and such)
 
 Done:
 
