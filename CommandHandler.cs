@@ -70,6 +70,9 @@
                 case "push":
                     return PushCommand(argument, player);
 
+                case "say":
+                    return SayCommand(argument, player);
+
                 case "save":
                     return SaveCommand();
 
@@ -115,7 +118,7 @@
                 index: index);
         }
 
-
+       
         private CommandResult PushCommand(
             string argument,
             Player player)
@@ -306,6 +309,21 @@
                 message: "You glance purposefully at absolutely nothing in particular.",
                 shouldContinue: true
                 );
+        }
+
+        // social commands
+        private CommandResult SayCommand(string argument, Player player)
+        {
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                return new CommandResult(
+                message: "Say what? ",
+                shouldContinue: true);
+            }
+            return new CommandResult(
+                message: $"You say: {argument}", 
+                shouldContinue: true,
+                roomMessage: $"{player.Name} says: { argument}");
         }
 
         // info commands

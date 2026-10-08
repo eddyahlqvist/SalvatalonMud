@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Numerics;
 using System.Threading.Tasks;
 
 namespace SalvatalonMud;
@@ -34,35 +33,62 @@ internal class MudServer
             Console.WriteLine(
                 $"[{DateTime.Now:HH:mm:ss}] A client connected.");
 
-            ClientSession session = new(client, _world);
-                       
-            foreach (ClientSession active in _sessions)
-            {
-                if (active.Player != null)
-                {
-                    await active.SendMessageAsync("A new traverler approaches the gates. ");
-                }
-            }
+            ClientSession session = new(client, _world, this);
+
+            await SendToActivePlayersAsync("A new traveler approaches the gates.");            
 
             _ = HandleSession(session);
         }
     }
 
+    internal async Task SendToRoomAsync(Player speaker, string message)
+    {
+        foreach (Player player in speaker.CurrentRoom.Players)
+        {
+            if (player != speaker)
+            {
+                await SendToPlayerAsync(player, message);
+            }
+        }
+    }
+
+    private async Task SendToPlayerAsync(Player targetPlayer, string message)
+    {
+        foreach (ClientSession active in _sessions)
+        {
+            if (active.Player == targetPlayer)
+            {
+                await active.SendMessageAsync(message);
+            }
+        }
+    }
+
+    private async Task SendToActivePlayersAsync(string message)
+    {
+        foreach (ClientSession active in _sessions)
+        {
+            if (active.Player != null)
+            {
+                await active.SendMessageAsync(message);
+            }
+        }
+    }
+
     private async Task HandleSession(ClientSession session)
-    {        
+    {
         _sessions.Add(session);
 
         try
         {
-            await session.RunAsync();            
+            await session.RunAsync();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Session error: {ex.Message}");
         }
-        finally 
-        {             
+        finally
+        {
             _sessions.Remove(session);
-        }        
+        }
     }
 }

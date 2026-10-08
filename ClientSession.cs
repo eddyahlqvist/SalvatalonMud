@@ -12,13 +12,15 @@ internal class ClientSession
     private readonly TcpClient _client;
     private readonly CommandHandler _commandHandler = new();
     private readonly World _world;
+    private readonly MudServer _server;
     internal Player? Player { get; private set; }
     private StreamWriter? _writer;
 
-    public ClientSession(TcpClient client, World world)
+    public ClientSession(TcpClient client, World world, MudServer mudServer)
     {
         _client = client;
         _world = world;
+        _server = mudServer;
     }
 
     public async Task RunAsync()
@@ -83,9 +85,11 @@ internal class ClientSession
                 if (command is null)
                 {
                     break;
-                }
+                }                
 
-                command = command.Trim().ToLowerInvariant();
+                command = command.Trim();
+                string rawCommand = command;
+                command = command.ToLowerInvariant();
 
                 if (string.IsNullOrEmpty(command))
                 {
@@ -105,9 +109,14 @@ internal class ClientSession
                 }
 
                 else
-                {
+                {                    
                     verb = command[..firstSpace];
                     argument = command[(firstSpace + 1)..].Trim();
+
+                    if (verb == "say")
+                    {
+                        argument = rawCommand[(firstSpace + 1)..].Trim();
+                    }
                 }
 
                 // check if input is about player movement
@@ -131,6 +140,11 @@ internal class ClientSession
                 }
 
                 await writer.WriteLineAsync(result.Message);
+
+                if (result.RoomMessage != null)
+                {
+                    await _server.SendToRoomAsync(Player, result.RoomMessage);
+                }
 
                 if (!result.ShouldContinue)
                 {
