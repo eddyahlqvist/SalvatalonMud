@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SalvatalonMud;
 
@@ -30,8 +31,24 @@ internal class WorldBuilder
         };
 
         // create and add items to specific rooms
-        Item sword = new(name: "Rusty Sword", description: "A sword that has seen better days.", weight: 15);
-        northRoad.Items.Add(sword);
+        for (int i = 0; i < 3; i++)
+        {            
+            Item sword = new(
+            name: "Rusty Sword",
+            displayNamePlural: "Rusty Swords",
+            description: "A sword that has seen better days.",
+            weight: 15,
+            keywords: new[] { "sword", "weapon" });
+
+            if (i < 2)
+            {
+                northRoad.Items.Add(sword);
+            }
+            else
+            {
+                tyrikaSquare.Items.Add(sword);
+            }
+        }                
 
         // create and add NPCs to specific rooms
         AddPigeons(

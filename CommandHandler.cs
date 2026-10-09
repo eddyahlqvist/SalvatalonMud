@@ -249,7 +249,7 @@
                         shouldContinue: true);
             }
 
-            int currentMatch = 0;
+            int currentNpcMatch = 0;
 
             TargetInfo target = ParseTarget(argument);
 
@@ -260,12 +260,31 @@
                     continue;
                 }
 
-                currentMatch++;
+                currentNpcMatch++;
 
-                if (currentMatch == target.Index)
+                if (currentNpcMatch == target.Index)
                 {
                     return new CommandResult(
                         message: npc.Description,
+                        shouldContinue: true);
+                }
+            }
+
+            int currentItemMatch = 0;
+
+            foreach (Item item in player.CurrentRoom.Items)
+            {
+                if (!item.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentItemMatch++;
+
+                if (currentItemMatch == target.Index)
+                {
+                    return new CommandResult(
+                        message: item.Description,
                         shouldContinue: true);
                 }
             }

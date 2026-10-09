@@ -33,7 +33,7 @@ namespace SalvatalonMud
             X = x;
             Y = y;
             Z = z;
-        }
+        }        
 
         public string GetDisplayText(bool includeDescription, Player player)
         {
