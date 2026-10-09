@@ -27,7 +27,11 @@ internal class WorldBuilder
         {
             tyrikaSquare,
             northRoad
-        };             
+        };
+
+        // create and add items to specific rooms
+        Item sword = new(name: "Rusty Sword", description: "A sword that has seen better days.", weight: 15);
+        northRoad.Items.Add(sword);
 
         // create and add NPCs to specific rooms
         AddPigeons(

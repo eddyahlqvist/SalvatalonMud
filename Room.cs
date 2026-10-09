@@ -18,6 +18,7 @@ namespace SalvatalonMud
         public List<Npc> Npcs { get; } = new();
 
         public List<Player> Players { get; } = new();
+        public List<Item> Items { get; } = new();
 
         public Room? North { get; set; }
         public Room? South { get; set; }
@@ -71,6 +72,11 @@ namespace SalvatalonMud
                     sb.AppendLine(
                         $"{amountText} {npc.DisplayNamePlural} are here.");
                 }
+            }
+
+            foreach (var item in Items)
+            {
+                sb.AppendLine($"A {item.Name} lies on the ground.");
             }
 
             return sb.ToString();
