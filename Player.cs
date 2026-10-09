@@ -1,10 +1,13 @@
-﻿namespace SalvatalonMud
+﻿using System.Collections.Generic;
+
+namespace SalvatalonMud
 {
     internal class Player
     {
         public string Name { get; }        
         public Room CurrentRoom { get; set; }
         public int HealthPoints { get; set; }
+        public List<Item> Inventory { get; } = new();
 
         public Player(string name, Room currentRoom, int healthPoints)
         {

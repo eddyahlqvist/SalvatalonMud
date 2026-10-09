@@ -61,7 +61,7 @@
                 case "score":
                     return ScoreCommand(player);
 
-                case "look":
+                case "look" or "l":
                     return LookCommand(argument, player);
 
                 case "glance":
@@ -72,6 +72,15 @@
 
                 case "say":
                     return SayCommand(argument, player);
+
+                case "get":
+                    return GetCommand(argument, player);
+
+                case "drop":
+                    return DropCommand(argument, player);
+
+                case "inventory" or "i":
+                    return InventoryCommand(player);
 
                 case "save":
                     return SaveCommand();
@@ -117,8 +126,116 @@
                 name: target,
                 index: index);
         }
+        
+        private CommandResult InventoryCommand(Player player)
+        {
+            string inventoryText = "Inventory:";
 
-       
+            if (player.Inventory.Count == 0)
+            {
+                inventoryText = "Your inventory is empty.";
+            }
+
+            foreach (Item item in player.Inventory)
+            {
+                inventoryText += $"\n{item.DisplayName}";
+            }
+
+            return new CommandResult(
+                message: inventoryText,
+                shouldContinue: true);            
+        }
+
+        private CommandResult GetCommand(string argument, Player player)
+        {
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                return new CommandResult(
+                    message: "Get what?",
+                    shouldContinue: true);
+            }
+
+            TargetInfo target = ParseTarget(argument);
+
+            Item? targetItem = null;
+
+            int currentItemMatch = 0;
+
+            foreach (Item item in player.CurrentRoom.Items)
+            {
+                if (!item.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentItemMatch++;
+
+                if (currentItemMatch == target.Index)
+                {
+                    targetItem = item;
+                    break;
+                }
+            }
+
+            if (targetItem is null)
+            {
+                return new CommandResult(
+                message: $"You can't seem to find {target.Name}.",
+                shouldContinue: true);                
+            }
+
+            targetItem.MoveToInventory(player);
+            return new CommandResult(
+                        message: $"You get {targetItem.Name} from {player.CurrentRoom.Name}.",
+                        shouldContinue: true);
+
+        }
+
+        private CommandResult DropCommand(string argument, Player player)
+        {
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                return new CommandResult(
+                    message: "Drop what?",
+                    shouldContinue: true);
+            }
+
+            TargetInfo target = ParseTarget(argument);
+
+            Item? targetItem = null;
+
+            int currentItemMatch = 0;
+
+            foreach (Item item in player.Inventory)
+            {
+                if (!item.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentItemMatch++;
+
+                if (currentItemMatch == target.Index)
+                {
+                    targetItem = item;
+                    break;
+                }
+            }
+
+            if (targetItem is null)
+            {
+                return new CommandResult(
+                 message: $"You can't seem to find any {target.Name} to drop.",
+                 shouldContinue: true);
+            }
+
+            targetItem.MoveToRoom(player);
+
+            return new CommandResult(
+                        message: $"You drop a {targetItem.Name}.",
+                        shouldContinue: true);
+        }
+
         private CommandResult PushCommand(
             string argument,
             Player player)
@@ -304,7 +421,7 @@
                 return new CommandResult(
                     message: player.CurrentRoom.GetDisplayText(includeDescription: false, player),
                     shouldContinue: true);
-            }            
+            }
 
             if (TryGetDirection(
                 argument,
@@ -322,7 +439,7 @@
                 return new CommandResult(
                         message: nextRoom.GetDisplayText(includeDescription: false, player),
                         shouldContinue: true);
-            }            
+            }
 
             return new CommandResult(
                 message: "You glance purposefully at absolutely nothing in particular.",
@@ -340,9 +457,9 @@
                 shouldContinue: true);
             }
             return new CommandResult(
-                message: $"You say: {argument}", 
+                message: $"You say: {argument}",
                 shouldContinue: true,
-                roomMessage: $"{player.Name} says: { argument}");
+                roomMessage: $"{player.Name} says: {argument}");
         }
 
         // info commands
@@ -356,10 +473,10 @@
 
         // system commands
         private CommandResult QuitCommand(Player player)
-        {            
+        {
             return new CommandResult(
                 message: "Goodbye!",
-                shouldContinue: false);            
+                shouldContinue: false);
         }
 
         private CommandResult SaveCommand()

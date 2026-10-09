@@ -38,7 +38,7 @@ internal class WorldBuilder
             displayNamePlural: "Rusty Swords",
             description: "A sword that has seen better days.",
             weight: 15,
-            keywords: new[] { "sword", "weapon" });
+            keywords: new string[] { "sword", "weapon" });
 
             if (i < 2)
             {
@@ -74,7 +74,7 @@ internal class WorldBuilder
             Npc pigeon = new(
                 name: "suspicious pigeon",
                 displayNamePlural: "Suspicious Pigeons",
-                keywords: new[]
+                keywords: new string[]
                 {
                 "pigeon",
                 "bird",
@@ -97,7 +97,7 @@ internal class WorldBuilder
             Npc townGuard = new(
                 name: "town guard",
                 displayNamePlural: "Town Guards",
-                keywords: new[]
+                keywords: new string[]
                 {
                 "guard",                
                 "monster"

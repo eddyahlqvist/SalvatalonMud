@@ -11,6 +11,7 @@ namespace SalvatalonMud
         public string DisplayNamePlural { get; }
         public string Description { get; }
         public Room CurrentRoom { get; set; }
+        public List<Item> Inventory { get; } = new();
         public int HealthPoints { get; set; }
 
         public Npc(
