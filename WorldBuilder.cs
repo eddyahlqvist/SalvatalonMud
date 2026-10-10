@@ -36,7 +36,7 @@ internal class WorldBuilder
             name: "Rusty Sword",
             displayNamePlural: "Rusty Swords",
             description: "A sword that has seen better days.",
-            weight: 15,
+            weight: 50, // temporary changed from 15 for testing purpose
             keywords: new string[] { "sword", "weapon" });
 
             if (i < 2)

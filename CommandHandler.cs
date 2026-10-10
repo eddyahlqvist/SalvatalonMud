@@ -188,11 +188,19 @@
                 shouldContinue: true);
             }
 
+            int currentWeight = player.GetInventoryWeight();
+
+            if (targetItem.Weight + currentWeight > player.MaxCarryWeight)
+            {
+                return new CommandResult(
+                    message: $"You are too weak to pick up the {targetItem.Name}. Should not have skipped leg day!", // better message later
+                    shouldContinue: true);                
+            }
+
             targetItem.MoveToInventory(player);
             return new CommandResult(
                         message: $"You get {targetItem.Name} from {player.CurrentRoom.Name}.",
                         shouldContinue: true);
-
         }
 
         private CommandResult DropCommand(string argument, Player player)
