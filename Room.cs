@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
 
 namespace SalvatalonMud
 {
@@ -33,7 +33,7 @@ namespace SalvatalonMud
             X = x;
             Y = y;
             Z = z;
-        }        
+        }
 
         public string GetDisplayText(bool includeDescription, Player player)
         {
@@ -53,7 +53,7 @@ namespace SalvatalonMud
                 if (otherPlayer != player)
                 {
                     sb.AppendLine($"{otherPlayer.Name} is here.");
-                }                
+                }
             }
 
             foreach (var npcGroup in Npcs.GroupBy(npc => npc.Name))

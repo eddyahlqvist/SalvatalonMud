@@ -35,7 +35,7 @@ internal class MudServer
 
             ClientSession session = new(client, _world, this);
 
-            await SendToActivePlayersAsync("A new traveler approaches the gates.");            
+            await SendToActivePlayersAsync("A new traveler approaches the gates."); // temporary            
 
             _ = HandleSession(session);
         }

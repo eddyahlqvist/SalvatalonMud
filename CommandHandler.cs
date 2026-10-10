@@ -126,14 +126,16 @@
                 name: target,
                 index: index);
         }
-        
+
         private CommandResult InventoryCommand(Player player)
         {
+            int currentWeight = player.GetInventoryWeight();
+
             string inventoryText = "Inventory:";
 
             if (player.Inventory.Count == 0)
             {
-                inventoryText = "Your inventory is empty.";
+                inventoryText = "Inventory: \nYou are not carrying anything.";
             }
 
             foreach (Item item in player.Inventory)
@@ -141,9 +143,11 @@
                 inventoryText += $"\n{item.DisplayName}";
             }
 
+            inventoryText += $"\nWeight: {currentWeight} / {player.MaxCarryWeight}.";
+
             return new CommandResult(
                 message: inventoryText,
-                shouldContinue: true);            
+                shouldContinue: true);
         }
 
         private CommandResult GetCommand(string argument, Player player)
@@ -181,7 +185,7 @@
             {
                 return new CommandResult(
                 message: $"You can't seem to find {target.Name}.",
-                shouldContinue: true);                
+                shouldContinue: true);
             }
 
             targetItem.MoveToInventory(player);
@@ -466,7 +470,7 @@
         private CommandResult ScoreCommand(Player player)
         {
             return new CommandResult(
-                    message: $"HP: {player.HealthPoints}",
+                    message: $"Race: {player.Race.Name}, HP: {player.HealthPoints}", // race here is just for testing, move to "sheet" later
                     shouldContinue: true
                 );
         }

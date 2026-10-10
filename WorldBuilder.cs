@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SalvatalonMud;
 
@@ -32,7 +31,7 @@ internal class WorldBuilder
 
         // create and add items to specific rooms
         for (int i = 0; i < 3; i++)
-        {            
+        {
             Item sword = new(
             name: "Rusty Sword",
             displayNamePlural: "Rusty Swords",
@@ -48,11 +47,11 @@ internal class WorldBuilder
             {
                 tyrikaSquare.Items.Add(sword);
             }
-        }                
+        }
 
         // create and add NPCs to specific rooms
         AddPigeons(
-            amount: 3, 
+            amount: 3,
             room: tyrikaSquare
             );
 
@@ -99,7 +98,7 @@ internal class WorldBuilder
                 displayNamePlural: "Town Guards",
                 keywords: new string[]
                 {
-                "guard",                
+                "guard",
                 "monster"
                 },
                 description:

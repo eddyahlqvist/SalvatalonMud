@@ -18,7 +18,7 @@ namespace SalvatalonMud
             string name,
             string displayNamePlural,
             IEnumerable<string> keywords,
-            string description,            
+            string description,
             Room currentRoom,
             int healthPoints)
         {

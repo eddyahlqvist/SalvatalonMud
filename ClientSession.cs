@@ -61,9 +61,22 @@ internal class ClientSession
 
             name = name.Trim();
 
+            // set race (temporary fixed solution)
+            Race human = new(
+                name: "Human",
+                startingStrength: 13,
+                startingDexterity: 13,
+                startingConstitution: 13,
+                startingIntelligence: 13,
+                startingWisdom: 13);
+
             // create a player
             PlayerBuilder playerBuilder = new();
-            Player = playerBuilder.Build(name, _world.StartingRoom);
+            Player = playerBuilder.Build(
+                name: name,
+                startingRoom: _world.StartingRoom,
+                race: human
+                );
 
             Player.CurrentRoom.Players.Add(Player);
 
@@ -85,7 +98,7 @@ internal class ClientSession
                 if (command is null)
                 {
                     break;
-                }                
+                }
 
                 command = command.Trim();
                 string rawCommand = command;
@@ -109,7 +122,7 @@ internal class ClientSession
                 }
 
                 else
-                {                    
+                {
                     verb = command[..firstSpace];
                     argument = command[(firstSpace + 1)..].Trim();
 

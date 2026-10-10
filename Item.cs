@@ -34,12 +34,12 @@ namespace SalvatalonMud
 
         public void MoveToInventory(Player player)
         {
-            player.CurrentRoom.Items.Remove(this);            
+            player.CurrentRoom.Items.Remove(this);
             player.Inventory.Add(this);
         }
 
         public void MoveToRoom(Player player)
-        {            
+        {
             player.Inventory.Remove(this);
             player.CurrentRoom.Items.Add(this);
         }
