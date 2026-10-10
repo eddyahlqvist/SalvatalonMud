@@ -8,7 +8,6 @@ namespace SalvatalonMud
         public Race Race { get; }
         public Room CurrentRoom { get; set; }
         public int HealthPoints { get; set; }
-        public int MaxHealthPoints { get; set; }
         public List<Item> Inventory { get; } = new();
         public int Strength { get; set; }
         public int Dexterity { get; set; }
@@ -17,6 +16,8 @@ namespace SalvatalonMud
         public int Wisdom { get; set; }
         public int MaxCarryWeight => Strength * 10;
         private const int ConstitutionModifier = 10;
+        public int MaxHealthPoints => Constitution * ConstitutionModifier;
+
 
 
         public Player(
@@ -35,7 +36,6 @@ namespace SalvatalonMud
             Intelligence = race.StartingIntelligence;
             Wisdom = race.StartingWisdom;
 
-            MaxHealthPoints = Constitution * ConstitutionModifier;
             HealthPoints = MaxHealthPoints;
         }
 
