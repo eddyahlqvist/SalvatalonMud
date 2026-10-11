@@ -384,39 +384,29 @@ namespace SalvatalonMud
                         shouldContinue: true);
             }
 
-            int currentNpcMatch = 0;
+            TargetInfo parsedTarget = ParseTarget(argument);
 
-            TargetInfo target = ParseTarget(argument);
+            Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            foreach (Npc npc in player.CurrentRoom.Npcs)
+            if (target != null)
             {
-                if (!npc.Matches(target.Name))
-                {
-                    continue;
-                }
-
-                currentNpcMatch++;
-
-                if (currentNpcMatch == target.Index)
-                {
-                    return new CommandResult(
-                        message: npc.Description,
-                        shouldContinue: true);
-                }
+                return new CommandResult(
+                    message: target.Description,
+                    shouldContinue: true);
             }
 
             int currentItemMatch = 0;
 
             foreach (Item item in player.CurrentRoom.Items)
             {
-                if (!item.Matches(target.Name))
+                if (!item.Matches(parsedTarget.Name))
                 {
                     continue;
                 }
 
                 currentItemMatch++;
 
-                if (currentItemMatch == target.Index)
+                if (currentItemMatch == parsedTarget.Index)
                 {
                     return new CommandResult(
                         message: item.Description,
@@ -584,8 +574,6 @@ namespace SalvatalonMud
             }
 
             int currentItemMatch = 0;
-
-            //TargetInfo itemTarget = ParseTarget(argument);
 
             foreach (Item item in player.CurrentRoom.Items)
             {
