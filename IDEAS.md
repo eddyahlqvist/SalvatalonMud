@@ -3,6 +3,7 @@
 Random ideas for things that might be fun to add someday.
 No roadmap, no promises, no particular order.
 
+- Immortal status
 - Post office
 - Pigeon Specialist guild?
 - add `all` as a targeting option
@@ -13,12 +14,9 @@ No roadmap, no promises, no particular order.
 - Actually handle exceptions in MudServer HandleSession() and not only log them.
 - Messages when players enter/leave rooms
 - Allow `push` to target players
-- Add stats
 - Strength affects whether you can push something
-- Suspicious Pigeon: easy to push
-- Town Guard: not so easy to push
+- Increased resistance to push to avoid abuse
 - NPCs might react to being pushed
-- Add inventory for players
 - Coins (cc, sc, gc and pc)
 - Bank (store and change coins)
 - Command inform on/off (show log in and log out and such)
@@ -26,5 +24,7 @@ No roadmap, no promises, no particular order.
 
 Done:
 
+- Add inventory for players
+- Add stats
 - `say` command
 - Players can see other players in rooms
