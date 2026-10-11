@@ -3,7 +3,6 @@
 Random ideas for things that might be fun to add someday.
 No roadmap, no promises, no particular order.
 
-- Immortal status
 - Post office
 - Pigeon Specialist guild?
 - add `all` as a targeting option
@@ -24,6 +23,7 @@ No roadmap, no promises, no particular order.
 
 Done:
 
+- Immortal status
 - Add inventory for players
 - Add stats
 - `say` command

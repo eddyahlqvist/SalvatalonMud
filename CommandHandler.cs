@@ -59,7 +59,7 @@
             switch (verb)
             {
                 case "score":
-                    return ScoreCommand(player);
+                    return ScoreCommand(argument, player);
 
                 case "look" or "l":
                     return LookCommand(argument, player);
@@ -194,7 +194,7 @@
             {
                 return new CommandResult(
                     message: $"You are too weak to pick up the {targetItem.Name}. Should not have skipped leg day!", // better message later
-                    shouldContinue: true);                
+                    shouldContinue: true);
             }
 
             targetItem.MoveToInventory(player);
@@ -475,21 +475,46 @@
         }
 
         // info commands
-        private CommandResult ScoreCommand(Player player)
+        private CommandResult ScoreCommand(string argument, Player player)
         {
             string scoreMessage = "";
 
             if (player.IsImmortal)
             {
-                scoreMessage = $"<Immortal> ";
+                scoreMessage = $"<Immortal>\n";
             }
 
-            scoreMessage += $"Race: {player.Race.Name}, HP: {player.HealthPoints}";
+            if (argument == "stats")
+            {
+                scoreMessage += $"Here are your current stats.\n" +
+                    $"Str: {player.Strength}, " +
+                    $"Dex: {player.Dexterity}, " +
+                    $"Con: {player.Constitution}, " +
+                    $"Int: {player.Intelligence}, " +
+                    $"Wis: {player.Wisdom}";
 
-            return new CommandResult(                
-                    message: scoreMessage, // race here is just for testing, move to "sheet" later
+                return new CommandResult(
+                    message: scoreMessage,
                     shouldContinue: true
                 );
+            }
+
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                scoreMessage += $"Race: {player.Race.Name}, HP: {player.HealthPoints}"; // race here is just for testing, move to "sheet" later
+
+                return new CommandResult(
+                        message: scoreMessage,
+                        shouldContinue: true
+                    );
+            }
+
+            scoreMessage = $"'{argument}' is not a valid score option. Try 'score' or 'score stats'.";
+
+            return new CommandResult(
+                        message: scoreMessage,
+                        shouldContinue: true
+                    );
         }
 
         // system commands
