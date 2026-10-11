@@ -14,7 +14,7 @@ No roadmap, no promises, no particular order.
 - Make _sessions (MudServer.cs) thread-safe (currently using a normal list)
 - Actually handle exceptions in MudServer HandleSession() and not only log them.
 - Messages when players enter/leave rooms
-- Allow `push` to target players
+- Allow `push` to target players (maybe)
 - Strength affects whether you can push something
 - Increased resistance to push to avoid abuse
 - NPCs might react to being pushed

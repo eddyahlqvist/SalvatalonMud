@@ -1,4 +1,7 @@
-﻿namespace SalvatalonMud
+﻿using System.Collections.Generic;
+using System.Numerics;
+
+namespace SalvatalonMud
 {
     internal class CommandHandler
     {
@@ -536,7 +539,6 @@
         }
 
         // immortal only commands
-
         private CommandResult AnalyzeCommand(Player player, string argument)
         {
             if (!player.IsImmortal)
@@ -553,56 +555,48 @@
                     shouldContinue: true);
             }
 
-            int currentNpcMatch = 0;
+            TargetInfo parsedTarget = ParseTarget(argument);
 
-            TargetInfo target = ParseTarget(argument);
+            Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            foreach (Npc npc in player.CurrentRoom.Npcs)
+            if (target != null)
             {
-                if (!npc.Matches(target.Name))
+                string keywords = "";
+                foreach (string keyword in target.Keywords)
                 {
-                    continue;
+                    keywords += $"{keyword}\n";
                 }
 
-                currentNpcMatch++;
+                string analyzeNpcMessage = $"Name: {target.Name}\n" +
+                    $"\nDescription: \n{target.Description}\n" +
+                    $"\nHealth Points: {target.HealthPoints}/{target.MaxHealthPoints}\n" +
+                    $"\nKeywords: \n{keywords}\n" +
+                    $"Stats: " +
+                    $"\nStr: {target.Stats.Strength}" +
+                    $"\nDex: {target.Stats.Dexterity}" +
+                    $"\nCon: {target.Stats.Constitution}" +
+                    $"\nInt: {target.Stats.Intelligence}" +
+                    $"\nWis: {target.Stats.Wisdom}";
 
-                if (currentNpcMatch == target.Index)
-                {
-                    string keywords = "";
-                    foreach (string keyword in npc.Keywords)
-                    {
-                        keywords += $"{keyword}\n";
-                    }
-
-                    string analyzeNpcMessage = $"Name: {npc.Name}\n" +
-                        $"\nDescription: \n{npc.Description}\n" +
-                        $"\nHealth Points: {npc.HealthPoints}/{npc.MaxHealthPoints}\n" +
-                        $"\nKeywords: \n{keywords}\n" +
-                        $"Stats: " +
-                        $"\nStr: {npc.Stats.Strength}" +
-                        $"\nDex: {npc.Stats.Dexterity}" +
-                        $"\nCon: {npc.Stats.Constitution}" +
-                        $"\nInt: {npc.Stats.Intelligence}" +
-                        $"\nWis: {npc.Stats.Wisdom}";
-
-                    return new CommandResult(
-                        message: analyzeNpcMessage,
-                        shouldContinue: true);
-                }
+                return new CommandResult(
+                    message: analyzeNpcMessage,
+                    shouldContinue: true);
             }
 
             int currentItemMatch = 0;
 
+            //TargetInfo itemTarget = ParseTarget(argument);
+
             foreach (Item item in player.CurrentRoom.Items)
             {
-                if (!item.Matches(target.Name))
+                if (!item.Matches(parsedTarget.Name))
                 {
                     continue;
                 }
 
                 currentItemMatch++;
 
-                if (currentItemMatch == target.Index)
+                if (currentItemMatch == parsedTarget.Index)
                 {
                     string keywords = "";
                     foreach (string keyword in item.Keywords)
@@ -622,8 +616,29 @@
             }
 
             return new CommandResult(
-                 message: $"<Immortal> You can't seem to find any {target.Name} to analyze.",
+                 message: $"<Immortal> You can't seem to find any {parsedTarget.Name} to analyze.",
                  shouldContinue: true);
+        }
+
+        private Npc? FindNpc(List<Npc> npcCollection, TargetInfo target)
+        {
+            int currentNpcMatch = 0;
+
+            foreach (Npc npc in npcCollection)
+            {
+                if (!npc.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentNpcMatch++;
+
+                if (currentNpcMatch == target.Index)
+                {
+                    return npc;
+                }
+            }
+            return null;
         }
     }
 }
