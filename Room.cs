@@ -14,9 +14,7 @@ namespace SalvatalonMud
         public int X { get; }
         public int Y { get; }
         public int Z { get; }
-
         public List<Npc> Npcs { get; } = new();
-
         public List<Player> Players { get; } = new();
         public List<Item> Items { get; } = new();
 

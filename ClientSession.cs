@@ -61,6 +61,15 @@ internal class ClientSession
 
             name = name.Trim();
 
+            // TEMPORARY: Local development only.
+            // Replace with authenticated character permissions before public access.
+            bool isImmortal = false;
+
+            if (name.Equals("Edius", StringComparison.OrdinalIgnoreCase))
+            {
+                isImmortal = true;
+            }
+
             // set race (temporary fixed solution)
             Race human = new(
                 name: "Human",
@@ -75,10 +84,11 @@ internal class ClientSession
             Player = playerBuilder.Build(
                 name: name,
                 startingRoom: _world.StartingRoom,
-                race: human
+                race: human,
+                isImmortal: isImmortal
                 );
 
-            Player.CurrentRoom.Players.Add(Player);
+            Player.CurrentRoom.Players.Add(Player);            
 
             await writer.WriteLineAsync();
 

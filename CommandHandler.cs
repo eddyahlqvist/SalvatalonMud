@@ -131,19 +131,19 @@
         {
             int currentWeight = player.GetInventoryWeight();
 
-            string inventoryText = "Inventory:";
+            string inventoryText = "Inventory:\n";
 
             if (player.Inventory.Count == 0)
             {
-                inventoryText = "Inventory: \nYou are not carrying anything.";
+                inventoryText += "You are not carrying anything.\n";
             }
 
             foreach (Item item in player.Inventory)
             {
-                inventoryText += $"\n{item.DisplayName}";
+                inventoryText += $"{item.DisplayName}\n";
             }
 
-            inventoryText += $"\nWeight: {currentWeight} / {player.MaxCarryWeight}.";
+            inventoryText += $"Weight: {currentWeight} / {player.MaxCarryWeight}.";
 
             return new CommandResult(
                 message: inventoryText,
@@ -477,8 +477,17 @@
         // info commands
         private CommandResult ScoreCommand(Player player)
         {
-            return new CommandResult(
-                    message: $"Race: {player.Race.Name}, HP: {player.HealthPoints}", // race here is just for testing, move to "sheet" later
+            string scoreMessage = "";
+
+            if (player.IsImmortal)
+            {
+                scoreMessage = $"<Immortal> ";
+            }
+
+            scoreMessage += $"Race: {player.Race.Name}, HP: {player.HealthPoints}";
+
+            return new CommandResult(                
+                    message: scoreMessage, // race here is just for testing, move to "sheet" later
                     shouldContinue: true
                 );
         }
