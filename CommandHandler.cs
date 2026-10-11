@@ -165,47 +165,29 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            TargetInfo target = ParseTarget(argument);
+            TargetInfo parsedTarget = ParseTarget(argument);
 
-            Item? targetItem = null;
+            Item? itemTarget = FindItem(player.CurrentRoom.Items, parsedTarget);
 
-            int currentItemMatch = 0;
-
-            foreach (Item item in player.CurrentRoom.Items)
-            {
-                if (!item.Matches(target.Name))
-                {
-                    continue;
-                }
-
-                currentItemMatch++;
-
-                if (currentItemMatch == target.Index)
-                {
-                    targetItem = item;
-                    break;
-                }
-            }
-
-            if (targetItem is null)
+            if (itemTarget is null)
             {
                 return new CommandResult(
-                message: $"You can't seem to find {target.Name}.",
+                message: $"You can't seem to find {parsedTarget.Name}.",
                 shouldContinue: true);
             }
 
             int currentWeight = player.GetInventoryWeight();
 
-            if (targetItem.Weight + currentWeight > player.MaxCarryWeight)
+            if (itemTarget.Weight + currentWeight > player.MaxCarryWeight)
             {
                 return new CommandResult(
-                    message: $"You are too weak to pick up the {targetItem.Name}. Should not have skipped leg day!", // better message later
+                    message: $"You are too weak to pick up the {itemTarget.Name}. Should not have skipped leg day!", // better message later
                     shouldContinue: true);
             }
 
-            targetItem.MoveToInventory(player);
+            itemTarget.MoveToInventory(player);
             return new CommandResult(
-                        message: $"You get {targetItem.Name} from {player.CurrentRoom.Name}.",
+                        message: $"You get {itemTarget.Name} from {player.CurrentRoom.Name}.",
                         shouldContinue: true);
         }
 
@@ -218,39 +200,21 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            TargetInfo target = ParseTarget(argument);
+            TargetInfo parsedTarget = ParseTarget(argument);
 
-            Item? targetItem = null;
+            Item? itemTarget = FindItem(player.Inventory, parsedTarget);
 
-            int currentItemMatch = 0;
-
-            foreach (Item item in player.Inventory)
-            {
-                if (!item.Matches(target.Name))
-                {
-                    continue;
-                }
-
-                currentItemMatch++;
-
-                if (currentItemMatch == target.Index)
-                {
-                    targetItem = item;
-                    break;
-                }
-            }
-
-            if (targetItem is null)
+            if (itemTarget is null)
             {
                 return new CommandResult(
-                 message: $"You can't seem to find any {target.Name} to drop.",
+                 message: $"You can't seem to find any {parsedTarget.Name} to drop.",
                  shouldContinue: true);
             }
 
-            targetItem.MoveToRoom(player);
+            itemTarget.MoveToRoom(player);
 
             return new CommandResult(
-                        message: $"You drop a {targetItem.Name}.",
+                        message: $"You drop a {itemTarget.Name}.",
                         shouldContinue: true);
         }
 
@@ -297,9 +261,9 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
+            Npc? npcTarget = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            if (target is null)
+            if (npcTarget is null)
             {
                 return new CommandResult(
                     message: $"You can't seem to find {parsedTarget.Name}.",
@@ -317,11 +281,11 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            target.MoveTo(destination);
+            npcTarget.MoveTo(destination);
 
             return new CommandResult(
                 message:
-                    $"You push {target.DisplayName} " +
+                    $"You push {npcTarget.DisplayName} " +
                     $"{directionInput}.",
                 shouldContinue: true);
         }
@@ -369,32 +333,22 @@ namespace SalvatalonMud
 
             TargetInfo parsedTarget = ParseTarget(argument);
 
-            Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
+            Npc? npcTarget = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            if (target is not null)
+            if (npcTarget is not null)
             {
                 return new CommandResult(
-                    message: target.Description,
+                    message: npcTarget.Description,
                     shouldContinue: true);
             }
 
-            int currentItemMatch = 0;
+            Item? itemTarget = FindItem(player.CurrentRoom.Items, parsedTarget);
 
-            foreach (Item item in player.CurrentRoom.Items)
+            if (itemTarget is not null)
             {
-                if (!item.Matches(parsedTarget.Name))
-                {
-                    continue;
-                }
-
-                currentItemMatch++;
-
-                if (currentItemMatch == parsedTarget.Index)
-                {
-                    return new CommandResult(
-                        message: item.Description,
-                        shouldContinue: true);
-                }
+                return new CommandResult(
+                    message: itemTarget.Description,
+                    shouldContinue: true);
             }
 
             return new CommandResult(
@@ -530,65 +484,76 @@ namespace SalvatalonMud
 
             TargetInfo parsedTarget = ParseTarget(argument);
 
-            Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
+            Npc? npcTarget = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            if (target is not null)
+            if (npcTarget is not null)
             {
-                string keywords = "";
-                foreach (string keyword in target.Keywords)
+                string npcKeywords = "";
+                foreach (string keyword in npcTarget.Keywords)
                 {
-                    keywords += $"{keyword}\n";
+                    npcKeywords += $"{keyword}\n";
                 }
 
-                string analyzeNpcMessage = $"Name: {target.Name}\n" +
-                    $"\nDescription: \n{target.Description}\n" +
-                    $"\nHealth Points: {target.HealthPoints}/{target.MaxHealthPoints}\n" +
-                    $"\nKeywords: \n{keywords}\n" +
+                string analyzeNpcMessage = $"Name: {npcTarget.Name}\n" +
+                    $"\nDescription: \n{npcTarget.Description}\n" +
+                    $"\nHealth Points: {npcTarget.HealthPoints}/{npcTarget.MaxHealthPoints}\n" +
+                    $"\nKeywords: \n{npcKeywords}\n" +
                     $"Stats: " +
-                    $"\nStr: {target.Stats.Strength}" +
-                    $"\nDex: {target.Stats.Dexterity}" +
-                    $"\nCon: {target.Stats.Constitution}" +
-                    $"\nInt: {target.Stats.Intelligence}" +
-                    $"\nWis: {target.Stats.Wisdom}";
+                    $"\nStr: {npcTarget.Stats.Strength}" +
+                    $"\nDex: {npcTarget.Stats.Dexterity}" +
+                    $"\nCon: {npcTarget.Stats.Constitution}" +
+                    $"\nInt: {npcTarget.Stats.Intelligence}" +
+                    $"\nWis: {npcTarget.Stats.Wisdom}";
 
                 return new CommandResult(
                     message: analyzeNpcMessage,
                     shouldContinue: true);
             }
 
+            Item? itemTarget = FindItem(player.CurrentRoom.Items, parsedTarget);
+
+            if (itemTarget is not null)
+            {
+                string itemKeywords = "";
+                foreach (string keyword in itemTarget.Keywords)
+                {
+                    itemKeywords += $"{keyword}\n";
+                }
+
+                string analyzeItemMessage = $"Name: {itemTarget.Name}\n" +
+                    $"Description: {itemTarget.Description}\n" +
+                    $"Weight: {itemTarget.Weight}\n" +
+                    $"Keywords: \n{itemKeywords}";
+
+                return new CommandResult(
+                    message: analyzeItemMessage,
+                    shouldContinue: true);
+            }
+
+            return new CommandResult(
+                 message: $"<Immortal> You can't seem to find any {parsedTarget.Name} to analyze.",
+                 shouldContinue: true);
+        }
+
+        private Item? FindItem(List<Item> itemCollection, TargetInfo target)
+        {
             int currentItemMatch = 0;
 
-            foreach (Item item in player.CurrentRoom.Items)
+            foreach (Item item in itemCollection)
             {
-                if (!item.Matches(parsedTarget.Name))
+                if (!item.Matches(target.Name))
                 {
                     continue;
                 }
 
                 currentItemMatch++;
 
-                if (currentItemMatch == parsedTarget.Index)
+                if (currentItemMatch == target.Index)
                 {
-                    string keywords = "";
-                    foreach (string keyword in item.Keywords)
-                    {
-                        keywords += $"{keyword}\n";
-                    }
-
-                    string analyzeItemMessage = $"Name: {item.Name}\n" +
-                        $"Description: {item.Description}\n" +
-                        $"Weight: {item.Weight}\n" +
-                        $"Keywords: \n{keywords}";
-
-                    return new CommandResult(
-                        message: analyzeItemMessage,
-                        shouldContinue: true);
+                    return item;
                 }
             }
-
-            return new CommandResult(
-                 message: $"<Immortal> You can't seem to find any {parsedTarget.Name} to analyze.",
-                 shouldContinue: true);
+            return null;
         }
 
         private Npc? FindNpc(List<Npc> npcCollection, TargetInfo target)
