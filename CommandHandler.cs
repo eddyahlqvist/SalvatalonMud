@@ -277,7 +277,7 @@ namespace SalvatalonMud
             if (lastSpace == -1)
             {
                 return new CommandResult(
-                    message: "Push what in which direction?", // fix better version later
+                    message: "Push what in which direction?",
                     shouldContinue: true);
             }
 
@@ -286,7 +286,7 @@ namespace SalvatalonMud
             string directionInput =
                 argument[(lastSpace + 1)..].Trim();
 
-            TargetInfo target = ParseTarget(targetInput);
+            TargetInfo parsedTarget = ParseTarget(targetInput);
 
             if (!TryGetDirection(
                 directionInput,
@@ -297,30 +297,12 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            Npc? targetNpc = null;
+            Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            int currentMatch = 0;
-
-            foreach (Npc npc in player.CurrentRoom.Npcs)
-            {
-                if (!npc.Matches(target.Name))
-                {
-                    continue;
-                }
-
-                currentMatch++;
-
-                if (currentMatch == target.Index)
-                {
-                    targetNpc = npc;
-                    break;
-                }
-            }
-
-            if (targetNpc is null)
+            if (target is null)
             {
                 return new CommandResult(
-                    message: $"You can't seem to find {target.Name}.",
+                    message: $"You can't seem to find {parsedTarget.Name}.",
                     shouldContinue: true);
             }
 
@@ -335,14 +317,15 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            targetNpc.MoveTo(destination);
+            target.MoveTo(destination);
 
             return new CommandResult(
                 message:
-                    $"You push {targetNpc.DisplayName} " +
+                    $"You push {target.DisplayName} " +
                     $"{directionInput}.",
                 shouldContinue: true);
         }
+
 
         private CommandResult LookCommand(
             string argument,
@@ -388,7 +371,7 @@ namespace SalvatalonMud
 
             Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            if (target != null)
+            if (target is not null)
             {
                 return new CommandResult(
                     message: target.Description,
@@ -549,7 +532,7 @@ namespace SalvatalonMud
 
             Npc? target = FindNpc(player.CurrentRoom.Npcs, parsedTarget);
 
-            if (target != null)
+            if (target is not null)
             {
                 string keywords = "";
                 foreach (string keyword in target.Keywords)
