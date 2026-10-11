@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SalvatalonMud;
 
@@ -48,7 +49,7 @@ internal class WorldBuilder
                 tyrikaSquare.Items.Add(sword);
             }
         }
-
+        
         // create and add NPCs to specific rooms
         AddPigeons(
             amount: 3,
@@ -67,9 +68,17 @@ internal class WorldBuilder
             rooms: rooms);
     }
     private static void AddPigeons(int amount, Room room)
-    {
+    {        
         for (int i = 0; i < amount; i++)
         {
+            Stats pigeonStats = new Stats(
+                startingStrength: 3,
+                startingDexterity: 4,
+                startingConstitution: 3,
+                startingIntelligence: 6,
+                startingWisdom: 16
+            );
+
             Npc pigeon = new(
                 name: "suspicious pigeon",
                 displayNamePlural: "Suspicious Pigeons",
@@ -82,17 +91,25 @@ internal class WorldBuilder
                 },
                 description:
                     "A suspicious pigeon watches you with open contempt.",
-                currentRoom: room,
-                healthPoints: 2);
+                currentRoom: room,                
+                stats: pigeonStats);
 
             room.Npcs.Add(pigeon);
         }
     }
 
     private static void AddTownGuards(int amount, Room room)
-    {
+    {        
         for (int i = 0; i < amount; i++)
         {
+            Stats townGuardStats = new Stats(
+                startingStrength: 14,
+                startingDexterity: 10,
+                startingConstitution: 10,
+                startingIntelligence: 10,
+                startingWisdom: 8
+            );
+
             Npc townGuard = new(
                 name: "town guard",
                 displayNamePlural: "Town Guards",
@@ -108,7 +125,7 @@ internal class WorldBuilder
                     "energy of a man whose primary goal is surviving his shift without seeing " +
                     "anything that requires paperwork.",
                 currentRoom: room,
-                healthPoints: 10);
+                stats: townGuardStats);
 
             room.Npcs.Add(townGuard);
         }

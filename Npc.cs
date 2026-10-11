@@ -12,7 +12,10 @@ namespace SalvatalonMud
         public string Description { get; }
         public Room CurrentRoom { get; set; }
         public List<Item> Inventory { get; } = new();
+        public Stats Stats { get; }
+        private const int ConstitutionModifier = 10;
         public int HealthPoints { get; set; }
+        public int MaxHealthPoints => Stats.Constitution * ConstitutionModifier;
 
         public Npc(
             string name,
@@ -20,7 +23,7 @@ namespace SalvatalonMud
             IEnumerable<string> keywords,
             string description,
             Room currentRoom,
-            int healthPoints)
+            Stats stats)
         {
             Name = name;
 
@@ -33,7 +36,8 @@ namespace SalvatalonMud
             Keywords = new List<string>(keywords);
             Description = description;
             CurrentRoom = currentRoom;
-            HealthPoints = healthPoints;
+            Stats = stats;
+            HealthPoints = MaxHealthPoints;
         }
 
         public bool Matches(string input)

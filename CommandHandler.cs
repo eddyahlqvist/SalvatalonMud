@@ -88,6 +88,9 @@
                 case "quit":
                     return QuitCommand(player);
 
+                case "analyze":
+                    return AnalyzeCommand(player, argument);
+
                 default:
                     return new CommandResult(
                         message: "Unknown command.",
@@ -530,6 +533,97 @@
             return new CommandResult(
                 message: "Saving... [████████████████████] 100% complete! Just kidding. I haven't coded that yet.",
                 shouldContinue: true);
+        }
+
+        // immortal only commands
+
+        private CommandResult AnalyzeCommand(Player player, string argument)
+        {
+            if (!player.IsImmortal)
+            {
+                return new CommandResult(
+                message: "Unknown command.",
+                shouldContinue: true);
+            }
+
+            if (string.IsNullOrWhiteSpace(argument))
+            {
+                return new CommandResult(
+                    message: "<Immortal> Analyze what?",
+                    shouldContinue: true);
+            }
+
+            int currentNpcMatch = 0;
+
+            TargetInfo target = ParseTarget(argument);
+
+            foreach (Npc npc in player.CurrentRoom.Npcs)
+            {
+                if (!npc.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentNpcMatch++;
+
+                if (currentNpcMatch == target.Index)
+                {
+                    string keywords = "";
+                    foreach (string keyword in npc.Keywords)
+                    {
+                        keywords += $"{keyword}\n";
+                    }
+
+                    string analyzeNpcMessage = $"Name: {npc.Name}\n" +
+                        $"\nDescription: \n{npc.Description}\n" +
+                        $"\nHealth Points: {npc.HealthPoints}/{npc.MaxHealthPoints}\n" +
+                        $"\nKeywords: \n{keywords}\n" +
+                        $"Stats: " +
+                        $"\nStr: {npc.Stats.Strength}" +
+                        $"\nDex: {npc.Stats.Dexterity}" +
+                        $"\nCon: {npc.Stats.Constitution}" +
+                        $"\nInt: {npc.Stats.Intelligence}" +
+                        $"\nWis: {npc.Stats.Wisdom}";
+
+                    return new CommandResult(
+                        message: analyzeNpcMessage,
+                        shouldContinue: true);
+                }
+            }
+
+            int currentItemMatch = 0;
+
+            foreach (Item item in player.CurrentRoom.Items)
+            {
+                if (!item.Matches(target.Name))
+                {
+                    continue;
+                }
+
+                currentItemMatch++;
+
+                if (currentItemMatch == target.Index)
+                {
+                    string keywords = "";
+                    foreach (string keyword in item.Keywords)
+                    {
+                        keywords += $"{keyword}\n";
+                    }
+
+                    string analyzeItemMessage = $"Name: {item.Name}\n" +
+                        $"Description: {item.Description}\n" +
+                        $"Weight: {item.Weight}\n" +
+                        $"Keywords: \n{keywords}";
+
+                    return new CommandResult(
+                        message: analyzeItemMessage,
+                        shouldContinue: true);
+                }
+            }
+
+            return new CommandResult(
+                 message: $"<Immortal> You can't seem to find any {target.Name} to analyze.",
+                 shouldContinue: true);
         }
     }
 }
