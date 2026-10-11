@@ -79,13 +79,23 @@ internal class ClientSession
                 startingIntelligence: 13,
                 startingWisdom: 13);
 
+            // create stats object
+            Stats stats = new Stats(
+                human.StartingStrength,
+                human.StartingDexterity,
+                human.StartingConstitution,
+                human.StartingIntelligence,
+                human.StartingWisdom
+                );
+
             // create a player
             PlayerBuilder playerBuilder = new();
             Player = playerBuilder.Build(
                 name: name,
                 startingRoom: _world.StartingRoom,
                 race: human,
-                isImmortal: isImmortal
+                isImmortal: isImmortal,
+                stats: stats
                 );
 
             Player.CurrentRoom.Players.Add(Player);            

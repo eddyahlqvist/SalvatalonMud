@@ -9,35 +9,25 @@ namespace SalvatalonMud
         public Room CurrentRoom { get; set; }
         public bool IsImmortal { get; }
         public List<Item> Inventory { get; } = new();
-        public int Strength { get; set; }
-        public int Dexterity { get; set; }
-        public int Constitution { get; set; }
-        public int Intelligence { get; set; }
-        public int Wisdom { get; set; }
-        public int MaxCarryWeight => Strength * 10;
+        public Stats Stats { get; }
+        public int MaxCarryWeight => Stats.Strength * 10;
         private const int ConstitutionModifier = 10;
         public int HealthPoints { get; set; }
-        public int MaxHealthPoints => Constitution * ConstitutionModifier;
-
-
+        public int MaxHealthPoints => Stats.Constitution * ConstitutionModifier;
 
         public Player(
             string name,
             Room currentRoom,
             Race race,
-            bool isImmortal
+            bool isImmortal,
+            Stats stats
             )
         {
             Name = name;
             CurrentRoom = currentRoom;
             Race = race;
             IsImmortal = isImmortal;
-
-            Strength = race.StartingStrength;
-            Dexterity = race.StartingDexterity;
-            Constitution = race.StartingConstitution;
-            Intelligence = race.StartingIntelligence;
-            Wisdom = race.StartingWisdom;
+            Stats = stats;
 
             HealthPoints = MaxHealthPoints;
         }

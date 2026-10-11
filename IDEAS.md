@@ -3,6 +3,8 @@
 Random ideas for things that might be fun to add someday.
 No roadmap, no promises, no particular order.
 
+- Let PlayerBuilder create the Stats object from the supplied Race instead of doing that in ClientSession.
+
 - Post office
 - Pigeon Specialist guild?
 - add `all` as a targeting option

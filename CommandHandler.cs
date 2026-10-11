@@ -487,11 +487,11 @@
             if (argument == "stats")
             {
                 scoreMessage += $"Here are your current stats.\n" +
-                    $"Str: {player.Strength}, " +
-                    $"Dex: {player.Dexterity}, " +
-                    $"Con: {player.Constitution}, " +
-                    $"Int: {player.Intelligence}, " +
-                    $"Wis: {player.Wisdom}";
+                    $"Str: {player.Stats.Strength}, " +
+                    $"Dex: {player.Stats.Dexterity}, " +
+                    $"Con: {player.Stats.Constitution}, " +
+                    $"Int: {player.Stats.Intelligence}, " +
+                    $"Wis: {player.Stats.Wisdom}";
 
                 return new CommandResult(
                     message: scoreMessage,
