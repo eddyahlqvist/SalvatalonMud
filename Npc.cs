@@ -10,7 +10,7 @@ namespace SalvatalonMud
         public string DisplayName { get; }
         public string DisplayNamePlural { get; }
         public string Description { get; }
-        public Room CurrentRoom { get; set; }
+        public Room? CurrentRoom { get; set; }
         public List<Item> Inventory { get; } = new();
         public Stats Stats { get; }
         private const int ConstitutionModifier = 10;
@@ -22,7 +22,6 @@ namespace SalvatalonMud
             string displayNamePlural,
             IEnumerable<string> keywords,
             string description,
-            Room currentRoom,
             Stats stats)
         {
             Name = name;
@@ -35,7 +34,7 @@ namespace SalvatalonMud
             DisplayNamePlural = displayNamePlural;
             Keywords = new List<string>(keywords);
             Description = description;
-            CurrentRoom = currentRoom;
+            CurrentRoom = null;
             Stats = stats;
             HealthPoints = MaxHealthPoints;
         }
@@ -47,7 +46,7 @@ namespace SalvatalonMud
 
         public void MoveTo(Room destination)
         {
-            CurrentRoom.Npcs.Remove(this);
+            CurrentRoom!.Npcs.Remove(this);
 
             CurrentRoom = destination;
 
