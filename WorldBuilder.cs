@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace SalvatalonMud;
 
@@ -37,7 +36,7 @@ internal class WorldBuilder
             name: "Rusty Sword",
             displayNamePlural: "Rusty Swords",
             description: "A sword that has seen better days.",
-            weight: 50, // temporary changed from 15 for testing purpose
+            weight: 30,
             keywords: new string[] { "sword", "weapon" });
 
             if (i < 2)
@@ -127,7 +126,19 @@ internal class WorldBuilder
                 currentRoom: room,
                 stats: townGuardStats);
 
-            room.Npcs.Add(townGuard);
+            for (int j = 0; j < 2; j++)
+            {
+                Item sword = new(
+                name: "Rusty Sword",
+                displayNamePlural: "Rusty Swords",
+                description: "A sword that has seen better days.",
+                weight: 30,
+                keywords: new string[] { "sword", "weapon" });
+
+                townGuard.Inventory.Add(sword);
+            }
+                                
+            room.Npcs.Add(townGuard);            
         }
     }
 }

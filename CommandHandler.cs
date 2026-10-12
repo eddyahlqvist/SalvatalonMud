@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Numerics;
 
 namespace SalvatalonMud
 {
@@ -494,8 +493,22 @@ namespace SalvatalonMud
                     npcKeywords += $"{keyword}\n";
                 }
 
+                string npcInventoryMessage = "";
+                if (npcTarget.Inventory.Count == 0)
+                {
+                    npcInventoryMessage = "Empty.\n";
+                }
+                else
+                {
+                    foreach (Item item in npcTarget.Inventory)
+                    {
+                        npcInventoryMessage += $"{item.Name}\n";
+                    }
+                }
+                
                 string analyzeNpcMessage = $"Name: {npcTarget.Name}\n" +
                     $"\nDescription: \n{npcTarget.Description}\n" +
+                    $"\nInventory: \n{npcInventoryMessage}" +
                     $"\nHealth Points: {npcTarget.HealthPoints}/{npcTarget.MaxHealthPoints}\n" +
                     $"\nKeywords: \n{npcKeywords}\n" +
                     $"Stats: " +
