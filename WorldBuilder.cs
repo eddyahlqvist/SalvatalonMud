@@ -41,6 +41,11 @@ internal class WorldBuilder
             createItem: CreateRustySword,
             northRoad);
 
+        AddItemToRoom(
+            amount: 1,
+            createItem: CreatePigeonFeather,
+            tyrikaSquare);
+
         // create and add npcs to specific rooms
         AddNpcToRoom(
             amount: 3,
@@ -79,6 +84,7 @@ internal class WorldBuilder
         }
     }
 
+    // weapons
     private static Item CreateRustySword()
     {
         Item sword = new(
@@ -89,6 +95,21 @@ internal class WorldBuilder
             keywords: new string[] { "sword", "weapon" });
 
         return sword;
+    }
+
+    // components, ingredients or junk items, not yet decided
+    private static Item CreatePigeonFeather()
+    {
+        Item feather = new(
+            name: "Pigeon Feather",
+            displayNamePlural: "Pigeon Feathers",
+            description: "A gray pigeon feather. It looks innocent enough, but it was " +
+            "attached to a bird that was clearly wearing a fake mustache. It " +
+            "feels uncomfortably warm.",
+            weight: 2,
+            keywords: new string[] { "feather" });
+
+        return feather;
     }
 
     private static Npc CreateSuspiciousPigeon()
@@ -115,6 +136,8 @@ internal class WorldBuilder
                 "A suspicious pigeon watches you with open contempt.",
             stats: startingStats);
 
+        npc.Inventory.Add(CreatePigeonFeather());
+
         return npc;
     }
 
@@ -128,7 +151,7 @@ internal class WorldBuilder
                 startingWisdom: 8
             );
 
-        Npc townGuard = new(
+        Npc npc = new(
             name: "town guard",
             displayNamePlural: "Town Guards",
             keywords: new string[]
@@ -144,8 +167,8 @@ internal class WorldBuilder
                 "anything that requires paperwork.",
             stats: startingStats);
 
-        townGuard.Inventory.Add(CreateRustySword());
+        npc.Inventory.Add(CreateRustySword());
 
-        return townGuard;
+        return npc;
     }
 }

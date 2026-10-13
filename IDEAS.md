@@ -18,7 +18,7 @@ No roadmap, no promises, no particular order.
 - Strength affects whether you can push something
 - Increased resistance to push to avoid abuse
 - NPCs might react to being pushed
-- Coins (cc, sc, gc and pc)
+- Coins (bc, cc, sc, gc and pc)
 - Bank (store and change coins)
 - Command inform on/off (show log in and log out and such)
 - Maybe add some form of need of eating food etc. Maybe.
