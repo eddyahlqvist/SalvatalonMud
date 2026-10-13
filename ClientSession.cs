@@ -88,8 +88,17 @@ internal class ClientSession
                 race: human,
                 isImmortal: isImmortal
                 );
+                        
+            Player.CurrentRoom.Players.Add(Player);
 
-            Player.CurrentRoom.Players.Add(Player);            
+            // TODO: Remove temporary starting coins
+            // temporary code for testing coin stuff
+            Player.CoinPurse.Platinum = 1;
+            Player.CoinPurse.Gold = 2;
+            Player.CoinPurse.Silver = 3;
+            Player.CoinPurse.Copper = 4;
+            Player.CoinPurse.Brass = 5;
+
 
             await writer.WriteLineAsync();
 

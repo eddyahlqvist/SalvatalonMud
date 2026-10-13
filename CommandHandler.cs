@@ -84,6 +84,9 @@ namespace SalvatalonMud
                 case "inventory" or "i":
                     return InventoryCommand(player);
 
+                case "coins":
+                    return CoinsCommand(player);
+
                 case "save":
                     return SaveCommand();
 
@@ -426,6 +429,28 @@ namespace SalvatalonMud
         }
 
         // info commands
+
+        private CommandResult CoinsCommand(Player player)
+        {
+            if (player.CoinPurse.TotalValue == 0)
+            {
+                return new CommandResult(
+                    message: "You don't have any coins. Even the pigeons are laughing at you!",
+                    shouldContinue: true);
+            }
+
+            // add info about bank account later when added to make CoinsCommand differ from inventory coins display.
+            return new CommandResult(
+                    message: $"You are carrying " +
+                    $"{player.CoinPurse.Platinum} platinum, " +
+                    $"{player.CoinPurse.Gold} gold, " +
+                    $"{player.CoinPurse.Silver} silver, " +
+                    $"{player.CoinPurse.Copper} copper and " +
+                    $"{player.CoinPurse.Brass} brass coins " +
+                    $"in your purse.",                    
+                    shouldContinue: true);            
+        }
+
         private CommandResult ScoreCommand(string argument, Player player)
         {
             string scoreMessage = "";
