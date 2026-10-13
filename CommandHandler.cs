@@ -336,6 +336,25 @@ namespace SalvatalonMud
 
             if (npcTarget is not null)
             {
+                if (npcTarget.CoinPurse.TotalValue > 0)
+                {
+                    // move TotalValue checks out of LookCommand later
+                    string purseMessage = "'s purse is "; // look into safer options for this later
+                    if (npcTarget.CoinPurse.TotalValue <= 5000)
+                        purseMessage += "flat at their side.";
+
+                    else if (npcTarget.CoinPurse.TotalValue <= 25000)
+                        purseMessage += "tinkling lightly with every step.";
+
+                    else
+                        purseMessage += "having a hard time staying closed.";
+
+                    return new CommandResult(
+                        message: $"{npcTarget.Description}\n" +
+                        $"{npcTarget.DisplayName}{purseMessage}",
+                        shouldContinue: true);
+                }
+
                 return new CommandResult(
                     message: npcTarget.Description,
                     shouldContinue: true);
@@ -509,6 +528,12 @@ namespace SalvatalonMud
                 string analyzeNpcMessage = $"Name: {npcTarget.Name}\n" +
                     $"\nDescription: \n{npcTarget.Description}\n" +
                     $"\nInventory: \n{npcInventoryMessage}" +
+                    $"Purse (Total Value = {npcTarget.CoinPurse.TotalValue}):" +
+                    $"\nBrass: {npcTarget.CoinPurse.Brass}" +
+                    $"\nCopper: {npcTarget.CoinPurse.Copper}" +
+                    $"\nSilver: {npcTarget.CoinPurse.Silver}" +
+                    $"\nGold: {npcTarget.CoinPurse.Gold}" +
+                    $"\nPlatinum: {npcTarget.CoinPurse.Platinum}\n" +
                     $"\nHealth Points: {npcTarget.HealthPoints}/{npcTarget.MaxHealthPoints}\n" +
                     $"\nKeywords: \n{npcKeywords}\n" +
                     $"Stats: " +

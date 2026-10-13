@@ -12,6 +12,7 @@ namespace SalvatalonMud
         public string Description { get; }
         public Room? CurrentRoom { get; set; }
         public List<Item> Inventory { get; } = new();
+        public CoinPurse CoinPurse { get; } = new();
         public Stats Stats { get; }
         private const int ConstitutionModifier = 10;
         public int HealthPoints { get; set; }

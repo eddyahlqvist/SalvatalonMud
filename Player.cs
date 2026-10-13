@@ -9,6 +9,7 @@ namespace SalvatalonMud
         public Room CurrentRoom { get; set; }
         public bool IsImmortal { get; }
         public List<Item> Inventory { get; } = new();
+        public CoinPurse CoinPurse { get; } = new();
         public Stats Stats { get; }
         public int MaxCarryWeight => Stats.Strength * 10;
         private const int ConstitutionModifier = 10;

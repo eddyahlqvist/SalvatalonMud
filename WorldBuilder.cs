@@ -169,6 +169,11 @@ internal class WorldBuilder
 
         npc.Inventory.Add(CreateRustySword());
 
+        npc.CoinPurse.Brass = 4;
+        npc.CoinPurse.Copper = 2;
+        npc.CoinPurse.Silver = 3;
+        npc.CoinPurse.Gold = 1;
+
         return npc;
     }
 }
