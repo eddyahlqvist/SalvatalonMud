@@ -139,6 +139,7 @@ namespace SalvatalonMud
         {
             int currentWeight = player.GetInventoryWeight();
 
+            string purseContent = "\nYour purse contains";
             string inventoryText = "Inventory:\n";
 
             if (player.Inventory.Count == 0)
@@ -152,6 +153,19 @@ namespace SalvatalonMud
             }
 
             inventoryText += $"Weight: {currentWeight} / {player.MaxCarryWeight}.";
+
+            if (player.CoinPurse.TotalValue == 0)
+            inventoryText += $"{purseContent} dust and dirt.";
+
+            else
+            {
+                inventoryText += $"{purseContent} " +
+                    $"{player.CoinPurse.Platinum} platinum, " +
+                    $"{player.CoinPurse.Gold} gold, " +
+                    $"{player.CoinPurse.Silver} silver, " +
+                    $"{player.CoinPurse.Copper} copper and " +
+                    $"{player.CoinPurse.Brass} brass coins.";                 
+            }
 
             return new CommandResult(
                 message: inventoryText,
