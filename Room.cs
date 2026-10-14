@@ -17,7 +17,7 @@ namespace SalvatalonMud
         public List<Npc> Npcs { get; } = new();
         public List<Player> Players { get; } = new();
         public List<Item> Items { get; } = new();
-
+        public CoinPurse GroundCoins { get; } = new();        
         public Room? North { get; set; }
         public Room? South { get; set; }
         public Room? East { get; set; }
@@ -75,6 +75,27 @@ namespace SalvatalonMud
             foreach (var item in Items)
             {
                 sb.AppendLine($"A {item.Name} lies on the ground.");
+            }
+
+            if (GroundCoins.Brass > 0)
+            {
+                sb.AppendLine($"{GroundCoins.Brass} brass coin.");
+            }
+            if (GroundCoins.Copper > 0)
+            {
+                sb.AppendLine($"{GroundCoins.Copper} copper coin.");
+            }
+            if (GroundCoins.Silver > 0)
+            {
+                sb.AppendLine($"{GroundCoins.Silver} silver coin.");
+            }
+            if (GroundCoins.Gold > 0)
+            {
+                sb.AppendLine($"{GroundCoins.Gold} gold coin.");
+            }
+            if (GroundCoins.Platinum > 0)
+            {
+                sb.AppendLine($"{GroundCoins.Platinum} platinum coin.");
             }
 
             return sb.ToString();

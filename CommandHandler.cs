@@ -155,7 +155,7 @@ namespace SalvatalonMud
             inventoryText += $"Weight: {currentWeight} / {player.MaxCarryWeight}.";
 
             if (player.CoinPurse.TotalValue == 0)
-            inventoryText += $"{purseContent} dust and dirt.";
+                inventoryText += $"{purseContent} dust and dirt.";
 
             else
             {
@@ -164,7 +164,7 @@ namespace SalvatalonMud
                     $"{player.CoinPurse.Gold} gold, " +
                     $"{player.CoinPurse.Silver} silver, " +
                     $"{player.CoinPurse.Copper} copper and " +
-                    $"{player.CoinPurse.Brass} brass coins.";                 
+                    $"{player.CoinPurse.Brass} brass coins.";
             }
 
             return new CommandResult(
@@ -178,6 +178,50 @@ namespace SalvatalonMud
             {
                 return new CommandResult(
                     message: "Get what?",
+                    shouldContinue: true);
+            }
+
+            if (argument == "coin" && player.CurrentRoom.GroundCoins.TotalValue == 0)
+            {
+                return new CommandResult(
+                    message: $"There are no coins for you to get.", // add funny message here later
+                    shouldContinue: true);
+            }
+            else if (argument == "coin" && player.CurrentRoom.GroundCoins.TotalValue > 0)
+            {
+                string coinDenomination = "";
+                if (player.CurrentRoom.GroundCoins.Brass > 0)
+                {                    
+                    player.CurrentRoom.GroundCoins.Brass--;
+                    player.CoinPurse.Brass++;
+                    coinDenomination = "brass coin";
+                }
+                else if (player.CurrentRoom.GroundCoins.Copper > 0)
+                {
+                    player.CurrentRoom.GroundCoins.Copper--;
+                    player.CoinPurse.Copper++;
+                    coinDenomination = "copper coin";
+                }
+                else if (player.CurrentRoom.GroundCoins.Silver > 0)
+                {
+                    player.CurrentRoom.GroundCoins.Silver--;
+                    player.CoinPurse.Silver++;
+                    coinDenomination = "silver coin";
+                }
+                else if (player.CurrentRoom.GroundCoins.Gold > 0)
+                {
+                    player.CurrentRoom.GroundCoins.Gold--;
+                    player.CoinPurse.Gold++;
+                    coinDenomination = "gold coin";
+                }
+                else if (player.CurrentRoom.GroundCoins.Platinum > 0)
+                {
+                    player.CurrentRoom.GroundCoins.Platinum--;
+                    player.CoinPurse.Platinum++;
+                    coinDenomination = "platinum coin";
+                }
+                return new CommandResult(
+                    message: $"You get a {coinDenomination}.",
                     shouldContinue: true);
             }
 
@@ -213,6 +257,50 @@ namespace SalvatalonMud
             {
                 return new CommandResult(
                     message: "Drop what?",
+                    shouldContinue: true);
+            }
+
+            if (argument == "coin" && player.CoinPurse.TotalValue == 0)
+            {
+                return new CommandResult(
+                    message: $"You don't have any coins to drop.",
+                    shouldContinue: true);
+            }
+            else if (argument == "coin" && player.CoinPurse.TotalValue > 0)
+            {
+                string coinDenomination = "";
+                if (player.CoinPurse.Brass > 0)
+                {
+                    player.CoinPurse.Brass--;
+                    player.CurrentRoom.GroundCoins.Brass++;
+                    coinDenomination = "brass coin";
+                }
+                else if (player.CoinPurse.Copper > 0)
+                {
+                    player.CoinPurse.Copper--;
+                    player.CurrentRoom.GroundCoins.Copper++;
+                    coinDenomination = "copper coin";
+                }
+                else if (player.CoinPurse.Silver > 0)
+                {
+                    player.CoinPurse.Silver--;
+                    player.CurrentRoom.GroundCoins.Silver++;
+                    coinDenomination = "silver coin";
+                }
+                else if (player.CoinPurse.Gold > 0)
+                {
+                    player.CoinPurse.Gold--;
+                    player.CurrentRoom.GroundCoins.Gold++;
+                    coinDenomination = "gold coin";
+                }
+                else if (player.CoinPurse.Platinum > 0)
+                {
+                    player.CoinPurse.Platinum--;
+                    player.CurrentRoom.GroundCoins.Platinum++;
+                    coinDenomination = "platinum coin";
+                }
+                return new CommandResult(
+                    message: $"You drop a {coinDenomination}.",
                     shouldContinue: true);
             }
 
@@ -461,8 +549,8 @@ namespace SalvatalonMud
                     $"{player.CoinPurse.Silver} silver, " +
                     $"{player.CoinPurse.Copper} copper and " +
                     $"{player.CoinPurse.Brass} brass coins " +
-                    $"in your purse.",                    
-                    shouldContinue: true);            
+                    $"in your purse.",
+                    shouldContinue: true);
         }
 
         private CommandResult ScoreCommand(string argument, Player player)
@@ -563,7 +651,7 @@ namespace SalvatalonMud
                         npcInventoryMessage += $"{item.Name}\n";
                     }
                 }
-                
+
                 string analyzeNpcMessage = $"Name: {npcTarget.Name}\n" +
                     $"\nDescription: \n{npcTarget.Description}\n" +
                     $"\nInventory: \n{npcInventoryMessage}" +
