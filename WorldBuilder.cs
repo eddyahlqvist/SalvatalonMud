@@ -20,14 +20,32 @@ internal class WorldBuilder
             x: 0, y: 1, z: 0
         );
 
+        Room eastRoad = new(
+            name: "East Road",
+            description: "A road leading east from Tyrika.",
+            x: 1, y: 0, z: 0
+        );
+
+        Room tyrikaBank = new(
+            name: "Bank of Tyrika",
+            description: "A sturdy building where you can conduct banking business.",
+            x: 1, y: -1, z: 0
+        );
+
         // connect rooms
-        tyrikaSquare.North = northRoad;
+        tyrikaSquare.North = northRoad;       
         northRoad.South = tyrikaSquare;
+        tyrikaSquare.East = eastRoad;
+        eastRoad.West = tyrikaSquare;
+        eastRoad.South = tyrikaBank;
+        tyrikaBank.North = eastRoad;
 
         List<Room> rooms = new()
         {
             tyrikaSquare,
-            northRoad
+            northRoad,
+            eastRoad,
+            tyrikaBank
         };
 
         // create and add items to specific rooms        
@@ -56,6 +74,11 @@ internal class WorldBuilder
             amount: 1,
             createNpc: CreateTownGuard,
             room: tyrikaSquare);
+
+        AddNpcToRoom(
+            amount: 1,
+            createNpc: CreateGripshark,
+            room: tyrikaBank);
 
         return new World(
             name: "Salvatalon",
@@ -173,6 +196,44 @@ internal class WorldBuilder
         npc.CoinPurse.Copper = 2;
         npc.CoinPurse.Silver = 3;
         npc.CoinPurse.Gold = 1;
+
+        return npc;
+    }
+
+    // unique NPCs
+    private static Npc CreateGripshark()
+    {
+        Stats startingStats = new Stats(
+                startingStrength: 8,
+                startingDexterity: 10,
+                startingConstitution: 12,
+                startingIntelligence: 18,
+                startingWisdom: 8
+            );
+
+        Npc npc = new(
+            name: "Gripshark",
+            displayNamePlural: "Goblin Bankers", //hmm... should never be Plural though...
+            keywords: new string[]
+            {
+                "gripshark",
+                "goblin",
+                "banker",
+                "monster"
+            },
+            description:
+                "You see a goblin who traded the traditional fear of daylight for an even stronger " +
+                "passion for double-entry bookkeeping. He wears a tailored suit clearly meant for a " +
+                "much larger dwarf, giving him the distinct silhouette of an angry, crumpled umbrella. " +
+                "Gripshark wears a pair of magnifying spectacles so thick they turn his eyes into two " +
+                "enormous, predatory glass marbles. Behind them lies an intellect sharp enough to calculate " +
+                "compound interest on half a copper piece. A fountain pen dances between his clawed fingers " +
+                "like a dagger—and frankly, in his hands, it probably is.",
+            stats: startingStats);
+
+        //npc.Inventory.Add(CreateFountainPen()); // maybe add this later for "protection"
+
+        npc.CoinPurse.Gold = 26;
 
         return npc;
     }
