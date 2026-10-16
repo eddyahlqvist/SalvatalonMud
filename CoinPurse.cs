@@ -21,7 +21,7 @@ namespace SalvatalonMud
             Gold * GoldValue +
             Platinum * PlatinumValue);
 
-        public void SetDenomination(Denomination denomination, long amount) //for immortal command later etc
+        public void SetDenomination(Denomination denomination, long amount)
         {
             if (amount < 0)
             {

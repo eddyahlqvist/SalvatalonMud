@@ -33,7 +33,7 @@ internal class WorldBuilder
         );
 
         // connect rooms
-        tyrikaSquare.North = northRoad;       
+        tyrikaSquare.North = northRoad;
         northRoad.South = tyrikaSquare;
         tyrikaSquare.East = eastRoad;
         eastRoad.West = tyrikaSquare;
@@ -192,10 +192,7 @@ internal class WorldBuilder
 
         npc.Inventory.Add(CreateRustySword());
 
-        npc.CoinPurse.Brass = 4;
-        npc.CoinPurse.Copper = 2;
-        npc.CoinPurse.Silver = 3;
-        npc.CoinPurse.Gold = 1;
+        npc.CoinPurse.SetDenomination(Denomination.Brass, 4);
 
         return npc;
     }
@@ -233,7 +230,7 @@ internal class WorldBuilder
 
         //npc.Inventory.Add(CreateFountainPen()); // maybe add this later for "protection"
 
-        npc.CoinPurse.Gold = 26;
+        npc.CoinPurse.SetDenomination(Denomination.Gold, 26);
 
         return npc;
     }

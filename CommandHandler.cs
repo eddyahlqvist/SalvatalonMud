@@ -191,33 +191,33 @@ namespace SalvatalonMud
             {
                 string coinDenomination = "";
                 if (player.CurrentRoom.GroundCoins.Brass > 0)
-                {                    
-                    player.CurrentRoom.GroundCoins.Brass--;
-                    player.CoinPurse.Brass++;
+                {
+                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Brass, 1);
+                    player.CoinPurse.AddDenomination(Denomination.Brass, 1);
                     coinDenomination = "brass coin";
                 }
                 else if (player.CurrentRoom.GroundCoins.Copper > 0)
                 {
-                    player.CurrentRoom.GroundCoins.Copper--;
-                    player.CoinPurse.Copper++;
+                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Copper, 1);
+                    player.CoinPurse.AddDenomination(Denomination.Copper, 1);
                     coinDenomination = "copper coin";
                 }
                 else if (player.CurrentRoom.GroundCoins.Silver > 0)
                 {
-                    player.CurrentRoom.GroundCoins.Silver--;
-                    player.CoinPurse.Silver++;
+                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Silver, 1);
+                    player.CoinPurse.AddDenomination(Denomination.Silver, 1);
                     coinDenomination = "silver coin";
                 }
                 else if (player.CurrentRoom.GroundCoins.Gold > 0)
                 {
-                    player.CurrentRoom.GroundCoins.Gold--;
-                    player.CoinPurse.Gold++;
+                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Gold, 1);
+                    player.CoinPurse.AddDenomination(Denomination.Gold, 1);
                     coinDenomination = "gold coin";
                 }
                 else if (player.CurrentRoom.GroundCoins.Platinum > 0)
                 {
-                    player.CurrentRoom.GroundCoins.Platinum--;
-                    player.CoinPurse.Platinum++;
+                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Platinum, 1);
+                    player.CoinPurse.AddDenomination(Denomination.Platinum, 1);
                     coinDenomination = "platinum coin";
                 }
                 return new CommandResult(
@@ -271,32 +271,32 @@ namespace SalvatalonMud
                 string coinDenomination = "";
                 if (player.CoinPurse.Brass > 0)
                 {
-                    player.CoinPurse.Brass--;
-                    player.CurrentRoom.GroundCoins.Brass++;
+                    player.CoinPurse.TryRemoveDenomination(Denomination.Brass, 1);
+                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Brass, 1);
                     coinDenomination = "brass coin";
                 }
                 else if (player.CoinPurse.Copper > 0)
                 {
-                    player.CoinPurse.Copper--;
-                    player.CurrentRoom.GroundCoins.Copper++;
+                    player.CoinPurse.TryRemoveDenomination(Denomination.Copper, 1);
+                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Copper, 1);
                     coinDenomination = "copper coin";
                 }
                 else if (player.CoinPurse.Silver > 0)
                 {
-                    player.CoinPurse.Silver--;
-                    player.CurrentRoom.GroundCoins.Silver++;
+                    player.CoinPurse.TryRemoveDenomination(Denomination.Silver, 1);
+                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Silver, 1);
                     coinDenomination = "silver coin";
                 }
                 else if (player.CoinPurse.Gold > 0)
                 {
-                    player.CoinPurse.Gold--;
-                    player.CurrentRoom.GroundCoins.Gold++;
+                    player.CoinPurse.TryRemoveDenomination(Denomination.Gold, 1);
+                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Gold, 1);
                     coinDenomination = "gold coin";
                 }
                 else if (player.CoinPurse.Platinum > 0)
                 {
-                    player.CoinPurse.Platinum--;
-                    player.CurrentRoom.GroundCoins.Platinum++;
+                    player.CoinPurse.TryRemoveDenomination(Denomination.Platinum, 1);
+                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Platinum, 1);
                     coinDenomination = "platinum coin";
                 }
                 return new CommandResult(
@@ -652,10 +652,10 @@ namespace SalvatalonMud
                     }
                 }
 
-                string analyzeNpcMessage = $"Name: {npcTarget.Name}\n" +
+                string analyzeNpcMessage = $"<Immortal>\nName: {npcTarget.Name}\n" +
                     $"\nDescription: \n{npcTarget.Description}\n" +
                     $"\nInventory: \n{npcInventoryMessage}" +
-                    $"Purse (Total Value = {npcTarget.CoinPurse.TotalValue}):" +
+                    $"\nPurse (Total Value = {npcTarget.CoinPurse.TotalValue}):" +
                     $"\nBrass: {npcTarget.CoinPurse.Brass}" +
                     $"\nCopper: {npcTarget.CoinPurse.Copper}" +
                     $"\nSilver: {npcTarget.CoinPurse.Silver}" +
@@ -685,10 +685,10 @@ namespace SalvatalonMud
                     itemKeywords += $"{keyword}\n";
                 }
 
-                string analyzeItemMessage = $"Name: {itemTarget.Name}\n" +
-                    $"Description: {itemTarget.Description}\n" +
-                    $"Weight: {itemTarget.Weight}\n" +
-                    $"Keywords: \n{itemKeywords}";
+                string analyzeItemMessage = $"<Immortal>\nName: {itemTarget.Name}\n" +
+                    $"\nDescription: {itemTarget.Description}\n" +
+                    $"\nWeight: {itemTarget.Weight}\n" +
+                    $"\nKeywords: \n{itemKeywords}";
 
                 return new CommandResult(
                     message: analyzeItemMessage,
