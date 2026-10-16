@@ -77,7 +77,7 @@ internal class ClientSession
                 startingDexterity: 13,
                 startingConstitution: 13,
                 startingIntelligence: 13,
-                startingWisdom: 13);            
+                startingWisdom: 13);
 
             // create a player
             PlayerBuilder playerBuilder = new();
@@ -88,17 +88,16 @@ internal class ClientSession
                 race: human,
                 isImmortal: isImmortal
                 );
-                        
+
             Player.CurrentRoom.Players.Add(Player);
 
             // TODO: Remove temporary starting coins
             // temporary code for testing coin stuff
-            Player.CoinPurse.Platinum = 1;
-            Player.CoinPurse.Gold = 2;
-            Player.CoinPurse.Silver = 3;
-            Player.CoinPurse.Copper = 4;
-            Player.CoinPurse.Brass = 5;
-
+            Player.CoinPurse.SetDenomination(Denomination.Platinum, 1);
+            Player.CoinPurse.SetDenomination(Denomination.Gold, 2);
+            Player.CoinPurse.SetDenomination(Denomination.Silver, 3);
+            Player.CoinPurse.SetDenomination(Denomination.Copper, 2);
+            Player.CoinPurse.SetDenomination(Denomination.Brass, 1);
 
             await writer.WriteLineAsync();
 

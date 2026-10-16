@@ -5,6 +5,7 @@ No roadmap, no promises, no particular order.
 
 - Let PlayerBuilder create the Stats object from the supplied Race instead of doing that in ClientSession.
 
+- Ensure CoinPurse transactions cannot produce a TotalValue exceeding long.MaxValue, including transfers between purses.
 - Post office
 - Pigeon Specialist guild?
 - add `all` as a targeting option
@@ -18,8 +19,8 @@ No roadmap, no promises, no particular order.
 - Strength affects whether you can push something
 - Increased resistance to push to avoid abuse
 - NPCs might react to being pushed
-- Coins (bc, cc, sc, gc and pc)
-- Bank (store and change coins)
+- Coins (bc, cc, sc, gc and pc) `work in progress`
+- Bank (store and change coins) `work in progress`
 - Command inform on/off (show log in and log out and such)
 - Maybe add some form of need of eating food etc. Maybe.
 
