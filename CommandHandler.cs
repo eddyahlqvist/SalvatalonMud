@@ -187,54 +187,21 @@ namespace SalvatalonMud
                     message: $"There are no coins for you to get.",
                     shouldContinue: true);
             }
-            else if (argument == "coin" && player.CurrentRoom.GroundCoins.HasCoins)
+            else if (argument == "coin")
             {
-                long transferAmount = 1;
-
-                string coinDenomination = "";
-                if (player.CurrentRoom.GroundCoins.TryTransferCoin(
-                    player.CoinPurse,
-                    Denomination.Brass,
-                    transferAmount))
-                {                    
-                    coinDenomination = "brass coin";
-                }
-                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
-                    player.CoinPurse,
-                    Denomination.Copper,
-                    transferAmount))
-                {
-                    coinDenomination = "copper coin";
-                }
-                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
-                    player.CoinPurse,
-                    Denomination.Silver,
-                    transferAmount))
-                {
-                    coinDenomination = "silver coin";
-                }
-                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
-                    player.CoinPurse,
-                    Denomination.Gold,
-                    transferAmount))
-                {
-                    coinDenomination = "gold coin";
-                }
-                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
-                    player.CoinPurse,
-                    Denomination.Platinum,
-                    transferAmount))
-                {
-                    coinDenomination = "platinum coin";
-                }
-                else
+                if (TryGetFirstAvailableDenomination(player.CurrentRoom.GroundCoins, out Denomination denomination)
+                    && player.CurrentRoom.GroundCoins.TryTransferCoin(
+                        player.CoinPurse,
+                        denomination,
+                        1))
                 {
                     return new CommandResult(
-                    message: $"Not enough space available for you to get that.", //better message or solution later
-                    shouldContinue: true);
+                        message: $"You get a {denomination.ToString().ToLowerInvariant()} coin.",
+                        shouldContinue: true);
                 }
+
                 return new CommandResult(
-                    message: $"You get a {coinDenomination}.",
+                    message: "Not enough space available for you to get that.",
                     shouldContinue: true);
             }
 
@@ -279,55 +246,22 @@ namespace SalvatalonMud
                     message: $"You don't have any coins to drop.",
                     shouldContinue: true);
             }
-            else if (argument == "coin" && player.CoinPurse.HasCoins)
+            else if (argument == "coin")
             {
-                long transferAmount = 1;
-
-                string coinDenomination = "";                
-                if (player.CoinPurse.TryTransferCoin(
-                    targetPurse: player.CurrentRoom.GroundCoins, 
-                    denomination: Denomination.Brass, 
-                    amount: transferAmount))
-                {                    
-                    coinDenomination = "brass coin";
-                }
-                else if (player.CoinPurse.TryTransferCoin(
-                    targetPurse: player.CurrentRoom.GroundCoins,
-                    denomination: Denomination.Copper,
-                    amount: transferAmount))
-                {                    
-                    coinDenomination = "copper coin";
-                }
-                else if (player.CoinPurse.TryTransferCoin(
-                    targetPurse: player.CurrentRoom.GroundCoins,
-                    denomination: Denomination.Silver,
-                    amount: transferAmount))
-                {                    
-                    coinDenomination = "silver coin";
-                }
-                else if (player.CoinPurse.TryTransferCoin(
-                    targetPurse: player.CurrentRoom.GroundCoins,
-                    denomination: Denomination.Gold,
-                    amount: transferAmount))
-                {                    
-                    coinDenomination = "gold coin";
-                }
-                else if (player.CoinPurse.TryTransferCoin(
-                    targetPurse: player.CurrentRoom.GroundCoins,
-                    denomination: Denomination.Platinum,
-                    amount: transferAmount))
-                {                    
-                    coinDenomination = "platinum coin";
-                }
-                else
+                if (TryGetFirstAvailableDenomination(player.CoinPurse, out Denomination denomination)
+                    && player.CoinPurse.TryTransferCoin(
+                        player.CurrentRoom.GroundCoins,
+                        denomination,
+                        1))
                 {
                     return new CommandResult(
-                    message: $"Not enough space available for you to drop that.", //better message or solution later
-                    shouldContinue: true);
+                        message: $"You drop a {denomination.ToString().ToLowerInvariant()} coin.",
+                        shouldContinue: true);
                 }
+
                 return new CommandResult(
-                    message: $"You drop a {coinDenomination}.",
-                    shouldContinue: true);
+                    message: "Not enough space available for you to drop that.",
+                    shouldContinue: true);                
             }
 
             TargetInfo parsedTarget = ParseTarget(argument);
@@ -766,6 +700,44 @@ namespace SalvatalonMud
                 }
             }
             return null;
+        }
+
+        private bool TryGetFirstAvailableDenomination(
+            CoinPurse purse,
+            out Denomination denomination)
+        {
+            if (purse.Brass > 0)
+            {
+                denomination = Denomination.Brass;
+                return true;
+            }
+
+            if (purse.Copper > 0)
+            {
+                denomination = Denomination.Copper;
+                return true;
+            }
+
+            if (purse.Silver > 0)
+            {
+                denomination = Denomination.Silver;
+                return true;
+            }
+
+            if (purse.Gold > 0)
+            {
+                denomination = Denomination.Gold;
+                return true;
+            }
+
+            if (purse.Platinum > 0)
+            {
+                denomination = Denomination.Platinum;
+                return true;
+            }
+
+            denomination = default;
+            return false;
         }
     }
 }
