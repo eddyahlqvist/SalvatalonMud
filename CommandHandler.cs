@@ -181,44 +181,57 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            if (argument == "coin" && player.CurrentRoom.GroundCoins.TotalValue == 0)
+            if (argument == "coin" && !player.CurrentRoom.GroundCoins.HasCoins)
             {
                 return new CommandResult(
-                    message: $"There are no coins for you to get.", // add funny message here later
+                    message: $"There are no coins for you to get.",
                     shouldContinue: true);
             }
-            else if (argument == "coin" && player.CurrentRoom.GroundCoins.TotalValue > 0)
+            else if (argument == "coin" && player.CurrentRoom.GroundCoins.HasCoins)
             {
+                long transferAmount = 1;
+
                 string coinDenomination = "";
-                if (player.CurrentRoom.GroundCoins.Brass > 0)
-                {
-                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Brass, 1);
-                    player.CoinPurse.AddDenomination(Denomination.Brass, 1);
+                if (player.CurrentRoom.GroundCoins.TryTransferCoin(
+                    player.CoinPurse,
+                    Denomination.Brass,
+                    transferAmount))
+                {                    
                     coinDenomination = "brass coin";
                 }
-                else if (player.CurrentRoom.GroundCoins.Copper > 0)
+                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
+                    player.CoinPurse,
+                    Denomination.Copper,
+                    transferAmount))
                 {
-                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Copper, 1);
-                    player.CoinPurse.AddDenomination(Denomination.Copper, 1);
                     coinDenomination = "copper coin";
                 }
-                else if (player.CurrentRoom.GroundCoins.Silver > 0)
+                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
+                    player.CoinPurse,
+                    Denomination.Silver,
+                    transferAmount))
                 {
-                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Silver, 1);
-                    player.CoinPurse.AddDenomination(Denomination.Silver, 1);
                     coinDenomination = "silver coin";
                 }
-                else if (player.CurrentRoom.GroundCoins.Gold > 0)
+                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
+                    player.CoinPurse,
+                    Denomination.Gold,
+                    transferAmount))
                 {
-                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Gold, 1);
-                    player.CoinPurse.AddDenomination(Denomination.Gold, 1);
                     coinDenomination = "gold coin";
                 }
-                else if (player.CurrentRoom.GroundCoins.Platinum > 0)
+                else if (player.CurrentRoom.GroundCoins.TryTransferCoin(
+                    player.CoinPurse,
+                    Denomination.Platinum,
+                    transferAmount))
                 {
-                    player.CurrentRoom.GroundCoins.TryRemoveDenomination(Denomination.Platinum, 1);
-                    player.CoinPurse.AddDenomination(Denomination.Platinum, 1);
                     coinDenomination = "platinum coin";
+                }
+                else
+                {
+                    return new CommandResult(
+                    message: $"Not enough space available for you to get that.", //better message or solution later
+                    shouldContinue: true);
                 }
                 return new CommandResult(
                     message: $"You get a {coinDenomination}.",
@@ -260,44 +273,57 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
-            if (argument == "coin" && player.CoinPurse.TotalValue == 0)
+            if (argument == "coin" && !player.CoinPurse.HasCoins)
             {
                 return new CommandResult(
                     message: $"You don't have any coins to drop.",
                     shouldContinue: true);
             }
-            else if (argument == "coin" && player.CoinPurse.TotalValue > 0)
+            else if (argument == "coin" && player.CoinPurse.HasCoins)
             {
-                string coinDenomination = "";
-                if (player.CoinPurse.Brass > 0)
-                {
-                    player.CoinPurse.TryRemoveDenomination(Denomination.Brass, 1);
-                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Brass, 1);
+                long transferAmount = 1;
+
+                string coinDenomination = "";                
+                if (player.CoinPurse.TryTransferCoin(
+                    targetPurse: player.CurrentRoom.GroundCoins, 
+                    denomination: Denomination.Brass, 
+                    amount: transferAmount))
+                {                    
                     coinDenomination = "brass coin";
                 }
-                else if (player.CoinPurse.Copper > 0)
-                {
-                    player.CoinPurse.TryRemoveDenomination(Denomination.Copper, 1);
-                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Copper, 1);
+                else if (player.CoinPurse.TryTransferCoin(
+                    targetPurse: player.CurrentRoom.GroundCoins,
+                    denomination: Denomination.Copper,
+                    amount: transferAmount))
+                {                    
                     coinDenomination = "copper coin";
                 }
-                else if (player.CoinPurse.Silver > 0)
-                {
-                    player.CoinPurse.TryRemoveDenomination(Denomination.Silver, 1);
-                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Silver, 1);
+                else if (player.CoinPurse.TryTransferCoin(
+                    targetPurse: player.CurrentRoom.GroundCoins,
+                    denomination: Denomination.Silver,
+                    amount: transferAmount))
+                {                    
                     coinDenomination = "silver coin";
                 }
-                else if (player.CoinPurse.Gold > 0)
-                {
-                    player.CoinPurse.TryRemoveDenomination(Denomination.Gold, 1);
-                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Gold, 1);
+                else if (player.CoinPurse.TryTransferCoin(
+                    targetPurse: player.CurrentRoom.GroundCoins,
+                    denomination: Denomination.Gold,
+                    amount: transferAmount))
+                {                    
                     coinDenomination = "gold coin";
                 }
-                else if (player.CoinPurse.Platinum > 0)
-                {
-                    player.CoinPurse.TryRemoveDenomination(Denomination.Platinum, 1);
-                    player.CurrentRoom.GroundCoins.AddDenomination(Denomination.Platinum, 1);
+                else if (player.CoinPurse.TryTransferCoin(
+                    targetPurse: player.CurrentRoom.GroundCoins,
+                    denomination: Denomination.Platinum,
+                    amount: transferAmount))
+                {                    
                     coinDenomination = "platinum coin";
+                }
+                else
+                {
+                    return new CommandResult(
+                    message: $"Not enough space available for you to drop that.", //better message or solution later
+                    shouldContinue: true);
                 }
                 return new CommandResult(
                     message: $"You drop a {coinDenomination}.",

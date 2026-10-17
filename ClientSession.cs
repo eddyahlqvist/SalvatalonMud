@@ -94,10 +94,10 @@ internal class ClientSession
             // TODO: Remove temporary starting coins
             // temporary code for testing coin stuff
             Player.CoinPurse.SetDenomination(Denomination.Platinum, 1);
-            Player.CoinPurse.SetDenomination(Denomination.Gold, 2);
-            Player.CoinPurse.SetDenomination(Denomination.Silver, 3);
-            Player.CoinPurse.SetDenomination(Denomination.Copper, 2);
-            Player.CoinPurse.SetDenomination(Denomination.Brass, 1);
+            Player.CoinPurse.SetDenomination(Denomination.Gold, 1);
+            Player.CoinPurse.SetDenomination(Denomination.Silver, 1);
+            Player.CoinPurse.SetDenomination(Denomination.Copper, 1);
+            Player.CoinPurse.SetDenomination(Denomination.Brass, 2);
 
             await writer.WriteLineAsync();
 

@@ -4,6 +4,7 @@ namespace SalvatalonMud
 {
     internal class CoinPurse
     {
+        private const int BrassValue = 1;
         private const int CopperValue = 10;
         private const int SilverValue = 100;
         private const int GoldValue = 1000;
@@ -20,6 +21,77 @@ namespace SalvatalonMud
             Silver * SilverValue +
             Gold * GoldValue +
             Platinum * PlatinumValue);
+        public bool HasCoins =>
+            Brass > 0 ||
+            Copper > 0 ||
+            Silver > 0 ||
+            Gold > 0 ||
+            Platinum > 0;
+
+        public bool TryTransferCoin(
+            CoinPurse targetPurse,
+            Denomination denomination,
+            long amount)
+        {            
+            if (targetPurse == null ||
+                !Enum.IsDefined(typeof(Denomination), denomination) ||
+                amount <= 0 ||
+                targetPurse == this)
+            {
+                return false;
+            }
+
+            long remainingCapacity = long.MaxValue - targetPurse.TotalValue;
+            long maxAmount = 0;
+
+            switch (denomination)
+            {
+                case Denomination.Brass:
+                    if (Brass < amount)
+                    {
+                        return false;
+                    }
+                    maxAmount = remainingCapacity / BrassValue;
+                    break;
+                case Denomination.Copper:
+                    if (Copper < amount)
+                    {
+                        return false;
+                    }
+                    maxAmount = remainingCapacity / CopperValue;
+                    break;
+                case Denomination.Silver:
+                    if (Silver < amount)
+                    {
+                        return false;
+                    }
+                    maxAmount = remainingCapacity / SilverValue;
+                    break;
+                case Denomination.Gold:
+                    if (Gold < amount)
+                    {
+                        return false;
+                    }
+                    maxAmount = remainingCapacity / GoldValue;
+                    break;
+                case Denomination.Platinum:
+                    if (Platinum < amount)
+                    {
+                        return false;
+                    }
+                    maxAmount = remainingCapacity / PlatinumValue;
+                    break;
+            }
+
+            if (amount > maxAmount)
+            {
+                return false;
+            }
+
+            TryRemoveDenomination(denomination, amount);
+            targetPurse.AddDenomination(denomination, amount);
+            return true;
+        }
 
         public void SetDenomination(Denomination denomination, long amount)
         {

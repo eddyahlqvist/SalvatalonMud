@@ -31,6 +31,7 @@ internal class WorldBuilder
             description: "A sturdy building where you can conduct banking business.",
             x: 1, y: -1, z: 0
         );
+        //tyrikaSquare.GroundCoins.SetDenomination(Denomination.Brass, long.MaxValue - 5); // for testing
 
         // connect rooms
         tyrikaSquare.North = northRoad;
