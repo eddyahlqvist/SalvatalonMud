@@ -66,7 +66,7 @@ namespace SalvatalonMud
                 case "look" or "l":
                     return LookCommand(argument, player);
 
-                case "glance":
+                case "glance" or "g":
                     return GlanceCommand(argument, player);
 
                 case "push":

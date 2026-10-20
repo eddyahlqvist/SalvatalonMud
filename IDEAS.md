@@ -5,6 +5,7 @@ No roadmap, no promises, no particular order.
 
 - Let PlayerBuilder create the Stats object from the supplied Race instead of doing that in ClientSession.
 
+- Fix targeting so it handles more cases
 - Make Suspicious Pigeons able to pick up ground coins
 - Limit SetDenomination() and AddDenomination() so it can't make TotalValue overflow.
 - Ensure CoinPurse transactions cannot produce a TotalValue exceeding long.MaxValue, including transfers between purses.

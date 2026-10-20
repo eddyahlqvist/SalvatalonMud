@@ -121,6 +121,22 @@ internal class WorldBuilder
         return sword;
     }
 
+    private static Item CreateGripsharksFountainPen()
+    {
+        Item fountainPen = new(
+            name: "Fountain Pen",
+            displayNamePlural: "Fountain Pens",
+            description: "The preferred weapon of Gripshark the Banker. Crafted from dark ebony and " +
+            "tipped with a diamond-dusted nib, this pen proves the old adage about the relative power " +
+            "of the pen and the sword. It is perfectly balanced for a fluid cursive script or a swift, " +
+            "underhanded kidney stab. Etched minutely along the clip is the banker's personal " +
+            "motto: 'Interest Never Sleeps, and Neither Do My Collection Agents.'",
+            weight: 4,
+            keywords: new string[] { "pen", "weapon" });
+
+        return fountainPen;
+    }
+
     // components, ingredients or junk items, not yet decided
     private static Item CreatePigeonFeather()
     {
@@ -229,7 +245,7 @@ internal class WorldBuilder
                 "like a dagger—and frankly, in his hands, it probably is.",
             stats: startingStats);
 
-        //npc.Inventory.Add(CreateFountainPen()); // maybe add this later for "protection"
+        npc.Inventory.Add(CreateGripsharksFountainPen());
 
         npc.CoinPurse.SetDenomination(Denomination.Gold, 26);
 
