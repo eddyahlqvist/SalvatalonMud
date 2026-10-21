@@ -28,11 +28,24 @@ namespace SalvatalonMud
             Gold > 0 ||
             Platinum > 0;
 
+        public long GetDenominationCount(Denomination denomination)
+        {
+            return denomination switch
+            {
+                Denomination.Brass => Brass,
+                Denomination.Copper => Copper,
+                Denomination.Silver => Silver,
+                Denomination.Gold => Gold,
+                Denomination.Platinum => Platinum,
+                _ => 0
+            };
+        }
+
         public bool TryTransferCoin(
             CoinPurse targetPurse,
             Denomination denomination,
             long amount)
-        {            
+        {
             if (targetPurse == null ||
                 !Enum.IsDefined(typeof(Denomination), denomination) ||
                 amount <= 0 ||

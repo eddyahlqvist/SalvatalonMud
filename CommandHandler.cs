@@ -205,6 +205,30 @@ namespace SalvatalonMud
                     shouldContinue: true);
             }
 
+            else if (ParseDenomination(argument, out Denomination denomination))
+            {
+                if (player.CurrentRoom.GroundCoins.GetDenominationCount(denomination) <= 0)
+                {
+                    return new CommandResult(
+                        message: $"There are no {denomination.ToString().ToLowerInvariant()} coins to get.",
+                        shouldContinue: true);
+                }
+
+                if (!player.CurrentRoom.GroundCoins.TryTransferCoin(
+                    player.CoinPurse,
+                    denomination,
+                    1))
+                {
+                    return new CommandResult(
+                        message: "Not enough space available for you to get that.",
+                        shouldContinue: true);
+                }
+
+                return new CommandResult(
+                    message: $"You get a {denomination.ToString().ToLowerInvariant()} coin.",
+                    shouldContinue: true);
+            }
+
             TargetInfo parsedTarget = ParseTarget(argument);
 
             Item? itemTarget = FindItem(player.CurrentRoom.Items, parsedTarget);
@@ -261,7 +285,31 @@ namespace SalvatalonMud
 
                 return new CommandResult(
                     message: "Not enough space available for you to drop that.",
-                    shouldContinue: true);                
+                    shouldContinue: true);
+            }
+
+            else if (ParseDenomination(argument, out Denomination denomination))
+            {
+                if (player.CoinPurse.GetDenominationCount(denomination) <= 0)
+                {
+                    return new CommandResult(
+                        message: $"You don't have any {denomination.ToString().ToLowerInvariant()} coins to drop.",
+                        shouldContinue: true);
+                }
+
+                if (!player.CoinPurse.TryTransferCoin(
+                    player.CurrentRoom.GroundCoins,
+                    denomination,
+                    1))
+                {
+                    return new CommandResult(
+                        message: "Not enough space available for you to drop that.",
+                        shouldContinue: true);
+                }
+
+                return new CommandResult(
+                    message: $"You drop a {denomination.ToString().ToLowerInvariant()} coin.",
+                    shouldContinue: true);
             }
 
             TargetInfo parsedTarget = ParseTarget(argument);
@@ -700,6 +748,28 @@ namespace SalvatalonMud
                 }
             }
             return null;
+        }
+
+        private bool ParseDenomination(string argument, out Denomination denomination)
+        {
+            Denomination? result = argument switch
+            {
+                "brass coin" => Denomination.Brass,
+                "copper coin" => Denomination.Copper,
+                "silver coin" => Denomination.Silver,
+                "gold coin" => Denomination.Gold,
+                "platinum coin" => Denomination.Platinum,
+                _ => null
+            };
+
+            if (result == null)
+            {
+                denomination = default;
+                return false;
+            }
+
+            denomination = result.Value;
+            return true;
         }
 
         private bool TryGetFirstAvailableDenomination(
